@@ -205,14 +205,14 @@
                 ]
             }
         },
-        "/api/users": {
+        "/api/companies": {
             "get": {
                 "tags": [
-                    "Usuários"
+                    "Empresas"
                 ],
-                "summary": "Listar usuários",
-                "description": "Retorna uma lista paginada de usuários. Requer permissão de admin master.",
-                "operationId": "listUsers",
+                "summary": "Listar empresas",
+                "description": "Retorna uma lista paginada de empresas. Requer permissão de admin master.",
+                "operationId": "listCompanies",
                 "parameters": [
                     {
                         "name": "page",
@@ -237,7 +237,7 @@
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "Termo de busca para filtrar usuários",
+                        "description": "Termo de busca para filtrar empresas por nome ou CNPJ",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -246,7 +246,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista de usuários retornada com sucesso",
+                        "description": "Lista de empresas retornada com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -261,19 +261,19 @@
                                                     },
                                                     "name": {
                                                         "type": "string",
-                                                        "example": "João Silva"
+                                                        "example": "Empresa Exemplo LTDA"
+                                                    },
+                                                    "cnpj": {
+                                                        "type": "string",
+                                                        "example": "12.345.678/0001-90"
                                                     },
                                                     "email": {
                                                         "type": "string",
-                                                        "example": "joao@exemplo.com"
+                                                        "example": "contato@empresa.com"
                                                     },
                                                     "phone": {
                                                         "type": "string",
-                                                        "example": "(11) 99999-9999"
-                                                    },
-                                                    "user_level_id": {
-                                                        "type": "integer",
-                                                        "example": 1
+                                                        "example": "(11) 3333-4444"
                                                     },
                                                     "created_at": {
                                                         "type": "string",
@@ -355,6 +355,582 @@
                     }
                 ]
             },
+            "post": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Criar empresa",
+                "description": "Cria uma nova empresa. Requer permissão de admin master.",
+                "operationId": "createCompany",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "cnpj"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Nome da empresa",
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Empresa Exemplo LTDA"
+                                    },
+                                    "cnpj": {
+                                        "description": "CNPJ único da empresa",
+                                        "type": "string",
+                                        "maxLength": 18,
+                                        "example": "12.345.678/0001-90"
+                                    },
+                                    "email": {
+                                        "description": "Email da empresa (opcional)",
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255,
+                                        "example": "contato@empresa.com"
+                                    },
+                                    "phone": {
+                                        "description": "Telefone da empresa (opcional)",
+                                        "type": "string",
+                                        "maxLength": 20,
+                                        "example": "(11) 3333-4444"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Empresa criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Empresa criada com sucesso"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Empresa Exemplo LTDA"
+                                                },
+                                                "cnpj": {
+                                                    "type": "string",
+                                                    "example": "12.345.678/0001-90"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "contato@empresa.com"
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "(11) 3333-4444"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-01-01T00:00:00.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-01-01T00:00:00.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acesso negado - Requer permissão de admin master",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Access denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "O nome da empresa é obrigatório."
+                                                    }
+                                                },
+                                                "cnpj": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Este CNPJ já está em uso."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/companies/{company}": {
+            "get": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Exibir empresa",
+                "description": "Retorna os dados de uma empresa específica.",
+                "operationId": "showCompany",
+                "parameters": [
+                    {
+                        "name": "company",
+                        "in": "path",
+                        "description": "ID da empresa",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empresa retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Empresa Exemplo LTDA"
+                                                },
+                                                "cnpj": {
+                                                    "type": "string",
+                                                    "example": "12.345.678/0001-90"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "contato@empresa.com"
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "(11) 3333-4444"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-01-01T00:00:00.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-01-01T00:00:00.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Empresa não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Empresa não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Atualizar empresa",
+                "description": "Atualiza os dados de uma empresa. Requer permissão de admin master.",
+                "operationId": "updateCompany",
+                "parameters": [
+                    {
+                        "name": "company",
+                        "in": "path",
+                        "description": "ID da empresa",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Nome da empresa",
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Empresa Atualizada LTDA"
+                                    },
+                                    "cnpj": {
+                                        "description": "CNPJ da empresa",
+                                        "type": "string",
+                                        "maxLength": 18,
+                                        "example": "12.345.678/0001-90"
+                                    },
+                                    "email": {
+                                        "description": "Email da empresa",
+                                        "type": "string",
+                                        "format": "email",
+                                        "maxLength": 255,
+                                        "example": "novo@empresa.com"
+                                    },
+                                    "phone": {
+                                        "description": "Telefone da empresa",
+                                        "type": "string",
+                                        "maxLength": 20,
+                                        "example": "(11) 4444-5555"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Empresa atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Empresa atualizada com sucesso"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Empresa Atualizada LTDA"
+                                                },
+                                                "cnpj": {
+                                                    "type": "string",
+                                                    "example": "12.345.678/0001-90"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "novo@empresa.com"
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "(11) 4444-5555"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-01-01T00:00:00.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-01-01T00:00:00.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acesso negado - Requer permissão de admin master",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Access denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Empresa não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Empresa não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "O nome da empresa é obrigatório."
+                                                    }
+                                                },
+                                                "cnpj": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Este CNPJ já está em uso."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Excluir empresa",
+                "description": "Exclui uma empresa. Requer permissão de admin master.",
+                "operationId": "deleteCompany",
+                "parameters": [
+                    {
+                        "name": "company",
+                        "in": "path",
+                        "description": "ID da empresa",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empresa excluída com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Empresa excluída com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acesso negado - Requer permissão de admin master",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Access denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Empresa não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Empresa não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users": {
             "post": {
                 "tags": [
                     "Usuários"
@@ -933,6 +1509,97 @@
                     }
                 ]
             }
+        },
+        "/api/users/levels": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Obter níveis de usuário",
+                "description": "Retorna os níveis de usuário abaixo do nível do usuário logado. Apenas usuários com nível 1 (Admin Master) ou 2 (Company Admin) podem acessar.",
+                "operationId": "getLevels",
+                "responses": {
+                    "200": {
+                        "description": "Níveis retornados com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    },
+                                                    "slug": {
+                                                        "type": "string",
+                                                        "example": "companyAdmin"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Administrador da Empresa"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-01-01T00:00:00.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-01-01T00:00:00.000000Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Não autorizado"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acesso negado - Usuários com nível 3 ou 4 não têm permissão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuários com nível 3 ou 4 não têm permissão para acessar esta funcionalidade."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -1170,6 +1837,10 @@
         {
             "name": "Usuários",
             "description": "Endpoints para gerenciamento de usuários"
+        },
+        {
+            "name": "Empresas",
+            "description": "Empresas"
         }
     ]
 }

@@ -9,7 +9,7 @@ class DeleteUserService
   /**
    * Delete an existing user
    */
-  public function execute(User $user): bool
+  public function delete(User $user): bool
   {
     // Revoke all tokens before deleting
     $user->tokens()->delete();

@@ -43,7 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
   // ========================================
 
   // Companies module
-  // Route::group([], base_path('app/Modules/Companies/routes.php'));
+  Route::group([], base_path('app/Modules/Companies/routes.php'));
 
   // Transactions module
   // Route::group([], base_path('app/Modules/Transactions/routes.php'));

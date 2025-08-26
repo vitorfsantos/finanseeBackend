@@ -10,7 +10,7 @@ class UpdateUserService
   /**
    * Update an existing user
    */
-  public function execute(User $user, array $data): User
+  public function update(User $user, array $data): User
   {
     // Hash the password if provided
     if (isset($data['password'])) {

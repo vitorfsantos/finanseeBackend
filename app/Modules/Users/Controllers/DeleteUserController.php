@@ -67,7 +67,7 @@ class DeleteUserController extends Controller
    */
   public function __invoke(User $user): JsonResponse
   {
-    $this->deleteUserService->execute($user);
+    $this->deleteUserService->delete($user);
 
     return response()->json([
       'message' => 'Usuário excluído com sucesso'

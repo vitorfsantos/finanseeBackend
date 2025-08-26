@@ -99,7 +99,7 @@ class UpdateUserController extends Controller
    */
   public function __invoke(UpdateUserRequest $request, User $user): JsonResponse
   {
-    $updatedUser = $this->updateUserService->execute($user, $request->validated());
+    $updatedUser = $this->updateUserService->update($user, $request->validated());
 
     return response()->json([
       'message' => 'Usuário atualizado com sucesso',
