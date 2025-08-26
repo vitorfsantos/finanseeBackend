@@ -48,13 +48,13 @@ class CheckRole
         return $user->user_level_id == 1;
       case 'companyAdmin':
         // Company Admin: user_level_id = 2 (Company Admin)
-        return $user->user_level_id >= 2;
+        return $user->user_level_id <= 2;
       case 'companyUser':
         // Company User: user_level_id >= 3 (Company User)
-        return $user->user_level_id >= 3;
+        return $user->user_level_id <= 3;
       case 'user':
         // User: user_level_id >= 4 (User)
-        return $user->user_level_id >= 4;
+        return $user->user_level_id <= 4;
 
       default:
         return false;

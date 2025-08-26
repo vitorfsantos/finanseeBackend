@@ -24,6 +24,7 @@ class CreateUserRequest extends BaseRequest
       'name' => 'required|string|max:255',
       'email' => 'required|email|unique:users,email|max:255',
       'password' => 'required|string|min:6|max:255',
+      'user_level_id' => 'required|exists:user_levels,id',
     ];
   }
 
@@ -42,6 +43,8 @@ class CreateUserRequest extends BaseRequest
       'password.required' => 'A senha é obrigatória.',
       'password.min' => 'A senha deve ter pelo menos 6 caracteres.',
       'password.max' => 'A senha não pode ter mais de 255 caracteres.',
+      'user_level_id.required' => 'O nível de usuário é obrigatório.',
+      'user_level_id.exists' => 'O nível de usuário não existe.',
     ];
   }
 }
