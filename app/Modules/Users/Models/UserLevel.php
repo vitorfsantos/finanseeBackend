@@ -5,10 +5,19 @@ namespace App\Modules\Users\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserLevel extends Model
 {
-  use SoftDeletes;
+  use SoftDeletes, HasFactory;
+
+  /**
+   * Create a new factory instance for the model.
+   */
+  protected static function newFactory()
+  {
+    return \App\Modules\Users\Models\Factories\UserLevelFactory::new();
+  }
 
   protected $fillable = [
     'slug',

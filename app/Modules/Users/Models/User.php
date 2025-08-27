@@ -13,8 +13,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
-  /** @use HasFactory<\Database\Factories\UserFactory> */
+  /** @use HasFactory<\App\Modules\Users\Models\Factories\UserFactory> */
   use HasFactory, Notifiable, HasApiTokens, HasUuids;
+
+  /**
+   * Create a new factory instance for the model.
+   */
+  protected static function newFactory()
+  {
+    return \App\Modules\Users\Models\Factories\UserFactory::new();
+  }
 
   /**
    * The attributes that are mass assignable.

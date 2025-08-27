@@ -13,6 +13,14 @@ class Company extends Model
   use HasFactory, HasUuids, SoftDeletes;
 
   /**
+   * Create a new factory instance for the model.
+   */
+  protected static function newFactory()
+  {
+    return \App\Modules\Companies\Models\Factories\CompanyFactory::new();
+  }
+
+  /**
    * The attributes that are mass assignable.
    *
    * @var list<string>
