@@ -21,7 +21,7 @@ class ListCompaniesService
    */
   public function getPaginated(int $perPage = 15): LengthAwarePaginator
   {
-    return Company::paginate($perPage);
+    return Company::with('address')->paginate($perPage);
   }
 
   /**
@@ -29,7 +29,8 @@ class ListCompaniesService
    */
   public function search(string $search, int $perPage = 15): LengthAwarePaginator
   {
-    return Company::where('name', 'like', "%{$search}%")
+    return Company::with('address')
+      ->where('name', 'like', "%{$search}%")
       ->orWhere('cnpj', 'like', "%{$search}%")
       ->paginate($perPage);
   }

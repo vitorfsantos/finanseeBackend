@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\Test;
 
 use App\Modules\Companies\Models\Company;
 use App\Modules\Companies\Services\CreateCompanyService;
+use App\Modules\Addresses\Services\AddressService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -20,7 +21,7 @@ class CreateCompanyServiceTest extends TestCase
   {
     parent::setUp();
 
-    $this->service = new CreateCompanyService();
+    $this->service = new CreateCompanyService(app(AddressService::class));
   }
 
   #[Test]

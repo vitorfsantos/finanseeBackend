@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Modules\Companies\Models;
+namespace App\Modules\Addresses\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Company extends Model
+class Address extends Model
 {
   use HasFactory, HasUuids, SoftDeletes;
 
@@ -18,7 +17,7 @@ class Company extends Model
    */
   protected static function newFactory()
   {
-    return \App\Modules\Companies\Models\Factories\CompanyFactory::new();
+    return \App\Modules\Addresses\Models\Factories\AddressFactory::new();
   }
 
   /**
@@ -27,10 +26,16 @@ class Company extends Model
    * @var list<string>
    */
   protected $fillable = [
-    'name',
-    'cnpj',
-    'email',
-    'phone',
+    'addressable_id',
+    'addressable_type',
+    'street',
+    'number',
+    'complement',
+    'neighborhood',
+    'city',
+    'state',
+    'zipcode',
+    'country',
   ];
 
   /**
@@ -48,18 +53,11 @@ class Company extends Model
   }
 
   /**
-   * Get the users associated with this company
+   * Get the parent addressable model (user or company).
    */
-  public function users(): HasMany
+  public function addressable(): MorphTo
   {
-    return $this->hasMany(\App\Modules\Users\Models\User::class);
-  }
-
-  /**
-   * Get the address associated with this company
-   */
-  public function address(): MorphOne
-  {
-    return $this->morphOne(\App\Modules\Addresses\Models\Address::class, 'addressable');
+    return $this->morphTo();
   }
 }
+

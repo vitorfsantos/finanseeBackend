@@ -29,7 +29,17 @@ use Illuminate\Http\JsonResponse;
  *             @OA\Property(property="name", type="string", maxLength=255, example="Empresa Atualizada LTDA", description="Nome da empresa"),
  *             @OA\Property(property="cnpj", type="string", maxLength=18, example="12.345.678/0001-90", description="CNPJ da empresa"),
  *             @OA\Property(property="email", type="string", format="email", maxLength=255, example="novo@empresa.com", description="Email da empresa"),
- *             @OA\Property(property="phone", type="string", maxLength=20, example="(11) 4444-5555", description="Telefone da empresa")
+ *             @OA\Property(property="phone", type="string", maxLength=20, example="(11) 4444-5555", description="Telefone da empresa"),
+ *             @OA\Property(property="address", type="object", description="Endereço da empresa (opcional)",
+ *                 @OA\Property(property="street", type="string", maxLength=255, example="Rua das Flores", description="Rua"),
+ *                 @OA\Property(property="number", type="string", maxLength=20, example="123", description="Número (opcional)"),
+ *                 @OA\Property(property="complement", type="string", maxLength=255, example="Sala 45", description="Complemento (opcional)"),
+ *                 @OA\Property(property="neighborhood", type="string", maxLength=255, example="Centro", description="Bairro (opcional)"),
+ *                 @OA\Property(property="city", type="string", maxLength=255, example="São Paulo", description="Cidade"),
+ *                 @OA\Property(property="state", type="string", maxLength=2, example="SP", description="Estado (2 caracteres)"),
+ *                 @OA\Property(property="zipcode", type="string", maxLength=10, example="01234-567", description="CEP"),
+ *                 @OA\Property(property="country", type="string", maxLength=255, example="Brasil", description="País (opcional, padrão: Brasil)")
+ *             )
  *         )
  *     ),
  *     @OA\Response(
@@ -43,6 +53,17 @@ use Illuminate\Http\JsonResponse;
  *                 @OA\Property(property="cnpj", type="string", example="12.345.678/0001-90"),
  *                 @OA\Property(property="email", type="string", example="novo@empresa.com"),
  *                 @OA\Property(property="phone", type="string", example="(11) 4444-5555"),
+ *                 @OA\Property(property="address", type="object", nullable=true,
+ *                     @OA\Property(property="id", type="string", example="550e8400-e29b-41d4-a716-446655440000"),
+ *                     @OA\Property(property="street", type="string", example="Rua das Flores"),
+ *                     @OA\Property(property="number", type="string", example="123"),
+ *                     @OA\Property(property="complement", type="string", example="Sala 45"),
+ *                     @OA\Property(property="neighborhood", type="string", example="Centro"),
+ *                     @OA\Property(property="city", type="string", example="São Paulo"),
+ *                     @OA\Property(property="state", type="string", example="SP"),
+ *                     @OA\Property(property="zipcode", type="string", example="01234-567"),
+ *                     @OA\Property(property="country", type="string", example="Brasil")
+ *                 ),
  *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01T00:00:00.000000Z"),
  *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-01T00:00:00.000000Z")
  *             )
