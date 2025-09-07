@@ -18,21 +18,21 @@ use Illuminate\Http\Request;
  *     @OA\Parameter(
  *         name="page",
  *         in="query",
- *         description="Número da página",
+ *         description="Número da página (opcional, padrão: 1)",
  *         required=false,
  *         @OA\Schema(type="integer", default=1)
  *     ),
  *     @OA\Parameter(
  *         name="per_page",
  *         in="query",
- *         description="Quantidade de itens por página",
+ *         description="Quantidade de itens por página (opcional, padrão: 10)",
  *         required=false,
  *         @OA\Schema(type="integer", default=10)
  *     ),
  *     @OA\Parameter(
  *         name="search",
  *         in="query",
- *         description="Termo de busca para filtrar usuários",
+ *         description="Termo de busca para filtrar usuários (opcional)",
  *         required=false,
  *         @OA\Schema(type="string")
  *     ),
@@ -74,44 +74,6 @@ use Illuminate\Http\Request;
  * )
  */
 
-/**
- * @OA\Get(
- *     path="/api/users/levels",
- *     operationId="getLevels",
- *     tags={"Usuários"},
- *     summary="Obter níveis de usuário",
- *     description="Retorna os níveis de usuário abaixo do nível do usuário logado. Apenas usuários com nível 1 (Admin Master) ou 2 (Company Admin) podem acessar.",
- *     security={{"bearerAuth":{}}},
- *     @OA\Response(
- *         response=200,
- *         description="Níveis retornados com sucesso",
- *         @OA\JsonContent(
- *             @OA\Property(property="data", type="array", @OA\Items(
- *                 @OA\Property(property="id", type="integer", example=2),
- *                 @OA\Property(property="slug", type="string", example="companyAdmin"),
- *                 @OA\Property(property="name", type="string", example="Administrador da Empresa"),
- *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01T00:00:00.000000Z"),
- *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-01T00:00:00.000000Z")
- *             ))
- *         )
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="Não autorizado",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="Não autorizado")
- *         )
- *     ),
- *     @OA\Response(
- *         response=403,
- *         description="Acesso negado - Usuários com nível 3 ou 4 não têm permissão",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="Usuários com nível 3 ou 4 não têm permissão para acessar esta funcionalidade.")
- *         )
- *     )
- * )
- */
-
 class ListUsersController extends Controller
 {
   protected ListUsersService $listUsersService;
@@ -140,6 +102,42 @@ class ListUsersController extends Controller
   }
 
   /**
+   * @OA\Get(
+   *     path="/api/users/levels",
+   *     operationId="getLevels",
+   *     tags={"Usuários"},
+   *     summary="Obter níveis de usuário",
+   *     description="Retorna os níveis de usuário abaixo do nível do usuário logado. Apenas usuários com nível 1 (Admin Master) ou 2 (Company Admin) podem acessar.",
+   *     security={{"bearerAuth":{}}},
+   *     @OA\Response(
+   *         response=200,
+   *         description="Níveis retornados com sucesso",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="data", type="array", @OA\Items(
+   *                 @OA\Property(property="id", type="integer", example=2),
+   *                 @OA\Property(property="slug", type="string", example="companyAdmin"),
+   *                 @OA\Property(property="name", type="string", example="Administrador da Empresa"),
+   *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01T00:00:00.000000Z"),
+   *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-01T00:00:00.000000Z")
+   *             ))
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=401,
+   *         description="Não autorizado",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="message", type="string", example="Não autorizado")
+   *         )
+   *     ),
+   *     @OA\Response(
+   *         response=403,
+   *         description="Acesso negado - Usuários com nível 3 ou 4 não têm permissão",
+   *         @OA\JsonContent(
+   *             @OA\Property(property="message", type="string", example="Usuários com nível 3 ou 4 não têm permissão para acessar esta funcionalidade.")
+   *         )
+   *     )
+   * )
+   * 
    * Get levels below the logged user's level
    */
   public function getLevels(Request $request): JsonResponse

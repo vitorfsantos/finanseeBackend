@@ -26,13 +26,13 @@ use Illuminate\Http\JsonResponse;
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="type", type="string", enum={"income","expense"}, example="expense", description="Tipo da transação (receita ou despesa)"),
+ *             @OA\Property(property="type", type="string", enum={"income","expense"}, example="expense", description="Tipo da transação (opcional: receita ou despesa)"),
+ *             @OA\Property(property="amount", type="number", format="float", example=25.50, description="Valor da transação (opcional, mínimo 0.01)"),
  *             @OA\Property(property="category", type="string", maxLength=255, example="Alimentação", description="Categoria da transação (opcional)"),
  *             @OA\Property(property="description", type="string", maxLength=1000, example="Almoço no restaurante", description="Descrição da transação (opcional)"),
- *             @OA\Property(property="amount", type="number", format="float", example=25.50, description="Valor da transação (mínimo 0.01)"),
- *             @OA\Property(property="date", type="string", format="date", example="2024-01-15", description="Data da transação (não pode ser futura)"),
- *             @OA\Property(property="user_id", type="string", format="uuid", example="550e8400-e29b-41d4-a716-446655440000", description="ID do usuário (apenas adminMaster)"),
- *             @OA\Property(property="company_id", type="string", format="uuid", example="550e8400-e29b-41d4-a716-446655440001", description="ID da empresa (apenas adminMaster)")
+ *             @OA\Property(property="date", type="string", format="date", example="2024-01-15", description="Data da transação (opcional, não pode ser futura)"),
+ *             @OA\Property(property="user_id", type="string", format="uuid", example="550e8400-e29b-41d4-a716-446655440000", description="ID do usuário (opcional, apenas adminMaster)"),
+ *             @OA\Property(property="company_id", type="string", format="uuid", example="550e8400-e29b-41d4-a716-446655440001", description="ID da empresa (opcional, apenas adminMaster)")
  *         )
  *     ),
  *     @OA\Response(

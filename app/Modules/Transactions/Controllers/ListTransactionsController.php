@@ -18,63 +18,63 @@ use Illuminate\Http\Request;
  *     @OA\Parameter(
  *         name="type",
  *         in="query",
- *         description="Filtrar por tipo (income ou expense)",
+ *         description="Filtrar por tipo (opcional: income ou expense)",
  *         required=false,
  *         @OA\Schema(type="string", enum={"income", "expense"})
  *     ),
  *     @OA\Parameter(
  *         name="user_id",
  *         in="query",
- *         description="Filtrar por usuário (apenas adminMaster)",
+ *         description="Filtrar por usuário (opcional, apenas adminMaster)",
  *         required=false,
  *         @OA\Schema(type="string", format="uuid")
  *     ),
  *     @OA\Parameter(
  *         name="company_id",
  *         in="query",
- *         description="Filtrar por empresa (apenas adminMaster)",
+ *         description="Filtrar por empresa (opcional, apenas adminMaster)",
  *         required=false,
  *         @OA\Schema(type="string", format="uuid")
  *     ),
  *     @OA\Parameter(
  *         name="category",
  *         in="query",
- *         description="Filtrar por categoria",
+ *         description="Filtrar por categoria (opcional)",
  *         required=false,
  *         @OA\Schema(type="string")
  *     ),
  *     @OA\Parameter(
  *         name="start_date",
  *         in="query",
- *         description="Data inicial (YYYY-MM-DD)",
+ *         description="Data inicial (opcional, formato: YYYY-MM-DD)",
  *         required=false,
  *         @OA\Schema(type="string", format="date")
  *     ),
  *     @OA\Parameter(
  *         name="end_date",
  *         in="query",
- *         description="Data final (YYYY-MM-DD)",
+ *         description="Data final (opcional, formato: YYYY-MM-DD)",
  *         required=false,
  *         @OA\Schema(type="string", format="date")
  *     ),
  *     @OA\Parameter(
  *         name="min_amount",
  *         in="query",
- *         description="Valor mínimo",
+ *         description="Valor mínimo (opcional)",
  *         required=false,
  *         @OA\Schema(type="number", format="float")
  *     ),
  *     @OA\Parameter(
  *         name="max_amount",
  *         in="query",
- *         description="Valor máximo",
+ *         description="Valor máximo (opcional)",
  *         required=false,
  *         @OA\Schema(type="number", format="float")
  *     ),
  *     @OA\Parameter(
  *         name="per_page",
  *         in="query",
- *         description="Itens por página",
+ *         description="Itens por página (opcional, padrão: 15)",
  *         required=false,
  *         @OA\Schema(type="integer", default=15)
  *     ),

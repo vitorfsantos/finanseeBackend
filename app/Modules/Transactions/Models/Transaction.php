@@ -46,9 +46,10 @@ class Transaction extends Model
   {
     return [
       'amount' => 'decimal:2',
-      'date' => 'date',
+      'date' => 'datetime',
     ];
   }
+
 
   /**
    * Get the user that owns the transaction

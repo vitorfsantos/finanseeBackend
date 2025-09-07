@@ -26,18 +26,18 @@ use Illuminate\Http\JsonResponse;
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="name", type="string", maxLength=255, example="Empresa Atualizada LTDA", description="Nome da empresa"),
- *             @OA\Property(property="cnpj", type="string", maxLength=18, example="12.345.678/0001-90", description="CNPJ da empresa"),
- *             @OA\Property(property="email", type="string", format="email", maxLength=255, example="novo@empresa.com", description="Email da empresa"),
- *             @OA\Property(property="phone", type="string", maxLength=20, example="(11) 4444-5555", description="Telefone da empresa"),
+ *             @OA\Property(property="name", type="string", maxLength=255, example="Empresa Atualizada LTDA", description="Nome da empresa (opcional)"),
+ *             @OA\Property(property="cnpj", type="string", maxLength=18, example="12.345.678/0001-90", description="CNPJ da empresa (opcional)"),
+ *             @OA\Property(property="email", type="string", format="email", maxLength=255, example="novo@empresa.com", description="Email da empresa (opcional)"),
+ *             @OA\Property(property="phone", type="string", maxLength=20, example="(11) 4444-5555", description="Telefone da empresa (opcional)"),
  *             @OA\Property(property="address", type="object", description="Endereço da empresa (opcional)",
- *                 @OA\Property(property="street", type="string", maxLength=255, example="Rua das Flores", description="Rua"),
+ *                 @OA\Property(property="street", type="string", maxLength=255, example="Rua das Flores", description="Rua (obrigatório se address for fornecido)"),
  *                 @OA\Property(property="number", type="string", maxLength=20, example="123", description="Número (opcional)"),
  *                 @OA\Property(property="complement", type="string", maxLength=255, example="Sala 45", description="Complemento (opcional)"),
  *                 @OA\Property(property="neighborhood", type="string", maxLength=255, example="Centro", description="Bairro (opcional)"),
- *                 @OA\Property(property="city", type="string", maxLength=255, example="São Paulo", description="Cidade"),
- *                 @OA\Property(property="state", type="string", maxLength=2, example="SP", description="Estado (2 caracteres)"),
- *                 @OA\Property(property="zipcode", type="string", maxLength=10, example="01234-567", description="CEP"),
+ *                 @OA\Property(property="city", type="string", maxLength=255, example="São Paulo", description="Cidade (obrigatório se address for fornecido)"),
+ *                 @OA\Property(property="state", type="string", maxLength=2, example="SP", description="Estado (obrigatório se address for fornecido, 2 caracteres)"),
+ *                 @OA\Property(property="zipcode", type="string", maxLength=10, example="01234-567", description="CEP (obrigatório se address for fornecido)"),
  *                 @OA\Property(property="country", type="string", maxLength=255, example="Brasil", description="País (opcional, padrão: Brasil)")
  *             )
  *         )

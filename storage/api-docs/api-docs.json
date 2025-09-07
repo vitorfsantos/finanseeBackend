@@ -39,13 +39,13 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "Email do usuário",
+                                        "description": "Email do usuário (obrigatório)",
                                         "type": "string",
                                         "format": "email",
                                         "example": "usuario@exemplo.com"
                                     },
                                     "password": {
-                                        "description": "Senha do usuário",
+                                        "description": "Senha do usuário (obrigatório)",
                                         "type": "string",
                                         "format": "password",
                                         "example": "123456"
@@ -217,7 +217,7 @@
                     {
                         "name": "page",
                         "in": "query",
-                        "description": "Número da página",
+                        "description": "Número da página (opcional, padrão: 1)",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -227,7 +227,7 @@
                     {
                         "name": "per_page",
                         "in": "query",
-                        "description": "Quantidade de itens por página",
+                        "description": "Quantidade de itens por página (opcional, padrão: 15)",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -237,7 +237,7 @@
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "Termo de busca para filtrar empresas por nome ou CNPJ",
+                        "description": "Termo de busca para filtrar empresas por nome ou CNPJ (opcional)",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -274,6 +274,48 @@
                                                     "phone": {
                                                         "type": "string",
                                                         "example": "(11) 3333-4444"
+                                                    },
+                                                    "address": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "550e8400-e29b-41d4-a716-446655440000"
+                                                            },
+                                                            "street": {
+                                                                "type": "string",
+                                                                "example": "Rua das Flores"
+                                                            },
+                                                            "number": {
+                                                                "type": "string",
+                                                                "example": "123"
+                                                            },
+                                                            "complement": {
+                                                                "type": "string",
+                                                                "example": "Sala 45"
+                                                            },
+                                                            "neighborhood": {
+                                                                "type": "string",
+                                                                "example": "Centro"
+                                                            },
+                                                            "city": {
+                                                                "type": "string",
+                                                                "example": "São Paulo"
+                                                            },
+                                                            "state": {
+                                                                "type": "string",
+                                                                "example": "SP"
+                                                            },
+                                                            "zipcode": {
+                                                                "type": "string",
+                                                                "example": "01234-567"
+                                                            },
+                                                            "country": {
+                                                                "type": "string",
+                                                                "example": "Brasil"
+                                                            }
+                                                        },
+                                                        "type": "object",
+                                                        "nullable": true
                                                     },
                                                     "created_at": {
                                                         "type": "string",
@@ -373,13 +415,13 @@
                                 ],
                                 "properties": {
                                     "name": {
-                                        "description": "Nome da empresa",
+                                        "description": "Nome da empresa (obrigatório)",
                                         "type": "string",
                                         "maxLength": 255,
                                         "example": "Empresa Exemplo LTDA"
                                     },
                                     "cnpj": {
-                                        "description": "CNPJ único da empresa",
+                                        "description": "CNPJ único da empresa (obrigatório)",
                                         "type": "string",
                                         "maxLength": 18,
                                         "example": "12.345.678/0001-90"
@@ -396,6 +438,60 @@
                                         "type": "string",
                                         "maxLength": 20,
                                         "example": "(11) 3333-4444"
+                                    },
+                                    "address": {
+                                        "description": "Endereço da empresa (opcional)",
+                                        "properties": {
+                                            "street": {
+                                                "description": "Rua (obrigatório se address for fornecido)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Rua das Flores"
+                                            },
+                                            "number": {
+                                                "description": "Número (opcional)",
+                                                "type": "string",
+                                                "maxLength": 20,
+                                                "example": "123"
+                                            },
+                                            "complement": {
+                                                "description": "Complemento (opcional)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Sala 45"
+                                            },
+                                            "neighborhood": {
+                                                "description": "Bairro (opcional)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Centro"
+                                            },
+                                            "city": {
+                                                "description": "Cidade (obrigatório se address for fornecido)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "São Paulo"
+                                            },
+                                            "state": {
+                                                "description": "Estado (obrigatório se address for fornecido, 2 caracteres)",
+                                                "type": "string",
+                                                "maxLength": 2,
+                                                "example": "SP"
+                                            },
+                                            "zipcode": {
+                                                "description": "CEP (obrigatório se address for fornecido)",
+                                                "type": "string",
+                                                "maxLength": 10,
+                                                "example": "01234-567"
+                                            },
+                                            "country": {
+                                                "description": "País (opcional, padrão: Brasil)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Brasil"
+                                            }
+                                        },
+                                        "type": "object"
                                     }
                                 },
                                 "type": "object"
@@ -435,6 +531,48 @@
                                                 "phone": {
                                                     "type": "string",
                                                     "example": "(11) 3333-4444"
+                                                },
+                                                "address": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string",
+                                                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                                                        },
+                                                        "street": {
+                                                            "type": "string",
+                                                            "example": "Rua das Flores"
+                                                        },
+                                                        "number": {
+                                                            "type": "string",
+                                                            "example": "123"
+                                                        },
+                                                        "complement": {
+                                                            "type": "string",
+                                                            "example": "Sala 45"
+                                                        },
+                                                        "neighborhood": {
+                                                            "type": "string",
+                                                            "example": "Centro"
+                                                        },
+                                                        "city": {
+                                                            "type": "string",
+                                                            "example": "São Paulo"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "example": "SP"
+                                                        },
+                                                        "zipcode": {
+                                                            "type": "string",
+                                                            "example": "01234-567"
+                                                        },
+                                                        "country": {
+                                                            "type": "string",
+                                                            "example": "Brasil"
+                                                        }
+                                                    },
+                                                    "type": "object",
+                                                    "nullable": true
                                                 },
                                                 "created_at": {
                                                     "type": "string",
@@ -580,6 +718,48 @@
                                                     "type": "string",
                                                     "example": "(11) 3333-4444"
                                                 },
+                                                "address": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string",
+                                                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                                                        },
+                                                        "street": {
+                                                            "type": "string",
+                                                            "example": "Rua das Flores"
+                                                        },
+                                                        "number": {
+                                                            "type": "string",
+                                                            "example": "123"
+                                                        },
+                                                        "complement": {
+                                                            "type": "string",
+                                                            "example": "Sala 45"
+                                                        },
+                                                        "neighborhood": {
+                                                            "type": "string",
+                                                            "example": "Centro"
+                                                        },
+                                                        "city": {
+                                                            "type": "string",
+                                                            "example": "São Paulo"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "example": "SP"
+                                                        },
+                                                        "zipcode": {
+                                                            "type": "string",
+                                                            "example": "01234-567"
+                                                        },
+                                                        "country": {
+                                                            "type": "string",
+                                                            "example": "Brasil"
+                                                        }
+                                                    },
+                                                    "type": "object",
+                                                    "nullable": true
+                                                },
                                                 "created_at": {
                                                     "type": "string",
                                                     "format": "date-time",
@@ -665,29 +845,83 @@
                             "schema": {
                                 "properties": {
                                     "name": {
-                                        "description": "Nome da empresa",
+                                        "description": "Nome da empresa (opcional)",
                                         "type": "string",
                                         "maxLength": 255,
                                         "example": "Empresa Atualizada LTDA"
                                     },
                                     "cnpj": {
-                                        "description": "CNPJ da empresa",
+                                        "description": "CNPJ da empresa (opcional)",
                                         "type": "string",
                                         "maxLength": 18,
                                         "example": "12.345.678/0001-90"
                                     },
                                     "email": {
-                                        "description": "Email da empresa",
+                                        "description": "Email da empresa (opcional)",
                                         "type": "string",
                                         "format": "email",
                                         "maxLength": 255,
                                         "example": "novo@empresa.com"
                                     },
                                     "phone": {
-                                        "description": "Telefone da empresa",
+                                        "description": "Telefone da empresa (opcional)",
                                         "type": "string",
                                         "maxLength": 20,
                                         "example": "(11) 4444-5555"
+                                    },
+                                    "address": {
+                                        "description": "Endereço da empresa (opcional)",
+                                        "properties": {
+                                            "street": {
+                                                "description": "Rua (obrigatório se address for fornecido)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Rua das Flores"
+                                            },
+                                            "number": {
+                                                "description": "Número (opcional)",
+                                                "type": "string",
+                                                "maxLength": 20,
+                                                "example": "123"
+                                            },
+                                            "complement": {
+                                                "description": "Complemento (opcional)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Sala 45"
+                                            },
+                                            "neighborhood": {
+                                                "description": "Bairro (opcional)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Centro"
+                                            },
+                                            "city": {
+                                                "description": "Cidade (obrigatório se address for fornecido)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "São Paulo"
+                                            },
+                                            "state": {
+                                                "description": "Estado (obrigatório se address for fornecido, 2 caracteres)",
+                                                "type": "string",
+                                                "maxLength": 2,
+                                                "example": "SP"
+                                            },
+                                            "zipcode": {
+                                                "description": "CEP (obrigatório se address for fornecido)",
+                                                "type": "string",
+                                                "maxLength": 10,
+                                                "example": "01234-567"
+                                            },
+                                            "country": {
+                                                "description": "País (opcional, padrão: Brasil)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Brasil"
+                                            }
+                                        },
+                                        "type": "object"
                                     }
                                 },
                                 "type": "object"
@@ -727,6 +961,48 @@
                                                 "phone": {
                                                     "type": "string",
                                                     "example": "(11) 4444-5555"
+                                                },
+                                                "address": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string",
+                                                            "example": "550e8400-e29b-41d4-a716-446655440000"
+                                                        },
+                                                        "street": {
+                                                            "type": "string",
+                                                            "example": "Rua das Flores"
+                                                        },
+                                                        "number": {
+                                                            "type": "string",
+                                                            "example": "123"
+                                                        },
+                                                        "complement": {
+                                                            "type": "string",
+                                                            "example": "Sala 45"
+                                                        },
+                                                        "neighborhood": {
+                                                            "type": "string",
+                                                            "example": "Centro"
+                                                        },
+                                                        "city": {
+                                                            "type": "string",
+                                                            "example": "São Paulo"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "example": "SP"
+                                                        },
+                                                        "zipcode": {
+                                                            "type": "string",
+                                                            "example": "01234-567"
+                                                        },
+                                                        "country": {
+                                                            "type": "string",
+                                                            "example": "Brasil"
+                                                        }
+                                                    },
+                                                    "type": "object",
+                                                    "nullable": true
                                                 },
                                                 "created_at": {
                                                     "type": "string",
@@ -930,7 +1206,869 @@
                 ]
             }
         },
+        "/api/transactions": {
+            "get": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Listar transações",
+                "description": "Lista transações financeiras com filtros. As permissões variam conforme o nível do usuário.",
+                "operationId": "listTransactions",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filtrar por tipo (opcional: income ou expense)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "income",
+                                "expense"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "Filtrar por usuário (opcional, apenas adminMaster)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "company_id",
+                        "in": "query",
+                        "description": "Filtrar por empresa (opcional, apenas adminMaster)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Filtrar por categoria (opcional)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Data inicial (opcional, formato: YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "Data final (opcional, formato: YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "min_amount",
+                        "in": "query",
+                        "description": "Valor mínimo (opcional)",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "max_amount",
+                        "in": "query",
+                        "description": "Valor máximo (opcional)",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Itens por página (opcional, padrão: 15)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de transações",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "format": "uuid"
+                                                    },
+                                                    "user_id": {
+                                                        "type": "string",
+                                                        "format": "uuid"
+                                                    },
+                                                    "company_id": {
+                                                        "type": "string",
+                                                        "format": "uuid",
+                                                        "nullable": true
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "category": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": {
+                                                        "type": "string"
+                                                    },
+                                                    "amount": {
+                                                        "type": "number",
+                                                        "format": "float"
+                                                    },
+                                                    "date": {
+                                                        "type": "string",
+                                                        "format": "date"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "last_page": {
+                                            "type": "integer"
+                                        },
+                                        "per_page": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Acesso negado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Criar transação",
+                "description": "Cria uma nova transação financeira. As permissões variam conforme o nível do usuário: adminMaster pode criar para qualquer usuário/empresa, companyAdmin/companyUser para sua empresa, user para si mesmo.",
+                "operationId": "createTransaction",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "description": "Tipo da transação (obrigatório: receita ou despesa)",
+                                        "type": "string",
+                                        "enum": [
+                                            "income",
+                                            "expense"
+                                        ],
+                                        "example": "expense"
+                                    },
+                                    "amount": {
+                                        "description": "Valor da transação (obrigatório, mínimo 0.01)",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 25.5
+                                    },
+                                    "category": {
+                                        "description": "Categoria da transação (opcional)",
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Alimentação"
+                                    },
+                                    "description": {
+                                        "description": "Descrição da transação (opcional)",
+                                        "type": "string",
+                                        "maxLength": 1000,
+                                        "example": "Almoço no restaurante"
+                                    },
+                                    "date": {
+                                        "description": "Data da transação (opcional, se não fornecida será usado o datetime atual)",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-15"
+                                    },
+                                    "user_id": {
+                                        "description": "ID do usuário (opcional, definido automaticamente conforme permissões)",
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "550e8400-e29b-41d4-a716-446655440000"
+                                    },
+                                    "company_id": {
+                                        "description": "ID da empresa (opcional, definido automaticamente conforme permissões)",
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "550e8400-e29b-41d4-a716-446655440001"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transação criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transação criada com sucesso"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "550e8400-e29b-41d4-a716-446655440002"
+                                                },
+                                                "user_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "550e8400-e29b-41d4-a716-446655440000"
+                                                },
+                                                "company_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "550e8400-e29b-41d4-a716-446655440001",
+                                                    "nullable": true
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "expense"
+                                                },
+                                                "category": {
+                                                    "type": "string",
+                                                    "example": "Alimentação"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Almoço no restaurante"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 25.5
+                                                },
+                                                "date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2024-01-15"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-01-15T12:00:00.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-01-15T12:00:00.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acesso negado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Access denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Dados de validação inválidos."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "type": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "O tipo de transação é obrigatório."
+                                                    }
+                                                },
+                                                "amount": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "O valor deve ser maior que zero."
+                                                    }
+                                                },
+                                                "date": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "A data não pode ser futura."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/transactions/{transaction}": {
+            "get": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Exibir transação",
+                "description": "Exibe uma transação financeira específica. As permissões variam conforme o nível do usuário.",
+                "operationId": "showTransaction",
+                "parameters": [
+                    {
+                        "name": "transaction",
+                        "in": "path",
+                        "description": "ID da transação",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transação encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid"
+                                                },
+                                                "user_id": {
+                                                    "type": "string",
+                                                    "format": "uuid"
+                                                },
+                                                "company_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "nullable": true
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "category": {
+                                                    "type": "string"
+                                                },
+                                                "description": {
+                                                    "type": "string"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "date": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "user": {
+                                                    "type": "object"
+                                                },
+                                                "company": {
+                                                    "type": "object",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Acesso negado"
+                    },
+                    "404": {
+                        "description": "Transação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Atualizar transação",
+                "description": "Atualiza uma transação financeira existente. As permissões variam conforme o nível do usuário.",
+                "operationId": "updateTransaction",
+                "parameters": [
+                    {
+                        "name": "transaction",
+                        "in": "path",
+                        "description": "ID da transação",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "description": "Tipo da transação (opcional: receita ou despesa)",
+                                        "type": "string",
+                                        "enum": [
+                                            "income",
+                                            "expense"
+                                        ],
+                                        "example": "expense"
+                                    },
+                                    "amount": {
+                                        "description": "Valor da transação (opcional, mínimo 0.01)",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 25.5
+                                    },
+                                    "category": {
+                                        "description": "Categoria da transação (opcional)",
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Alimentação"
+                                    },
+                                    "description": {
+                                        "description": "Descrição da transação (opcional)",
+                                        "type": "string",
+                                        "maxLength": 1000,
+                                        "example": "Almoço no restaurante"
+                                    },
+                                    "date": {
+                                        "description": "Data da transação (opcional, não pode ser futura)",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-15"
+                                    },
+                                    "user_id": {
+                                        "description": "ID do usuário (opcional, apenas adminMaster)",
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "550e8400-e29b-41d4-a716-446655440000"
+                                    },
+                                    "company_id": {
+                                        "description": "ID da empresa (opcional, apenas adminMaster)",
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "550e8400-e29b-41d4-a716-446655440001"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transação atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transação atualizada com sucesso"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid"
+                                                },
+                                                "user_id": {
+                                                    "type": "string",
+                                                    "format": "uuid"
+                                                },
+                                                "company_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "nullable": true
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "category": {
+                                                    "type": "string"
+                                                },
+                                                "description": {
+                                                    "type": "string"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "format": "float"
+                                                },
+                                                "date": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Acesso negado"
+                    },
+                    "404": {
+                        "description": "Transação não encontrada"
+                    },
+                    "422": {
+                        "description": "Dados de entrada inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Excluir transação",
+                "description": "Exclui uma transação financeira. As permissões variam conforme o nível do usuário.",
+                "operationId": "deleteTransaction",
+                "parameters": [
+                    {
+                        "name": "transaction",
+                        "in": "path",
+                        "description": "ID da transação",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transação excluída com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transação excluída com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "403": {
+                        "description": "Acesso negado"
+                    },
+                    "404": {
+                        "description": "Transação não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/users": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Listar usuários",
+                "description": "Retorna uma lista paginada de usuários. Requer permissão de admin master.",
+                "operationId": "listUsers",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número da página (opcional, padrão: 1)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Quantidade de itens por página (opcional, padrão: 10)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Termo de busca para filtrar usuários (opcional)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuários retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "550e8400-e29b-41d4-a716-446655440000"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "João Silva"
+                                                    },
+                                                    "email": {
+                                                        "type": "string",
+                                                        "example": "joao@exemplo.com"
+                                                    },
+                                                    "phone": {
+                                                        "type": "string",
+                                                        "example": "(11) 99999-9999"
+                                                    },
+                                                    "user_level_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-01-01T00:00:00.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-01-01T00:00:00.000000Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 100
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 7
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acesso negado - Requer permissão de admin master",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Access denied."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
             "post": {
                 "tags": [
                     "Usuários"
@@ -946,38 +2084,39 @@
                                 "required": [
                                     "name",
                                     "email",
-                                    "password"
+                                    "password",
+                                    "user_level_id"
                                 ],
                                 "properties": {
                                     "name": {
-                                        "description": "Nome completo do usuário",
+                                        "description": "Nome completo do usuário (obrigatório)",
                                         "type": "string",
                                         "maxLength": 255,
                                         "example": "João Silva"
                                     },
                                     "email": {
-                                        "description": "Email único do usuário",
+                                        "description": "Email único do usuário (obrigatório)",
                                         "type": "string",
                                         "format": "email",
                                         "maxLength": 255,
                                         "example": "joao@exemplo.com"
                                     },
                                     "password": {
-                                        "description": "Senha do usuário (mínimo 6 caracteres)",
+                                        "description": "Senha do usuário (obrigatório, mínimo 6 caracteres)",
                                         "type": "string",
                                         "maxLength": 255,
                                         "minLength": 6,
                                         "example": "123456"
                                     },
+                                    "user_level_id": {
+                                        "description": "ID do nível do usuário (obrigatório)",
+                                        "type": "integer",
+                                        "example": 2
+                                    },
                                     "phone": {
                                         "description": "Telefone do usuário (opcional)",
                                         "type": "string",
                                         "example": "(11) 99999-9999"
-                                    },
-                                    "user_level_id": {
-                                        "description": "ID do nível do usuário (opcional)",
-                                        "type": "integer",
-                                        "example": 2
                                     }
                                 },
                                 "type": "object"
@@ -1233,32 +2372,32 @@
                             "schema": {
                                 "properties": {
                                     "name": {
-                                        "description": "Nome completo do usuário",
+                                        "description": "Nome completo do usuário (opcional)",
                                         "type": "string",
                                         "maxLength": 255,
                                         "example": "João Silva Santos"
                                     },
                                     "email": {
-                                        "description": "Email do usuário",
+                                        "description": "Email do usuário (opcional)",
                                         "type": "string",
                                         "format": "email",
                                         "maxLength": 255,
                                         "example": "joao.silva@exemplo.com"
                                     },
                                     "password": {
-                                        "description": "Nova senha do usuário (mínimo 6 caracteres)",
+                                        "description": "Nova senha do usuário (opcional, mínimo 6 caracteres)",
                                         "type": "string",
                                         "maxLength": 255,
                                         "minLength": 6,
                                         "example": "123456"
                                     },
                                     "phone": {
-                                        "description": "Telefone do usuário",
+                                        "description": "Telefone do usuário (opcional)",
                                         "type": "string",
                                         "example": "(11) 88888-8888"
                                     },
                                     "user_level_id": {
-                                        "description": "ID do nível do usuário",
+                                        "description": "ID do nível do usuário (opcional)",
                                         "type": "integer",
                                         "example": 3
                                     }
@@ -1841,6 +2980,10 @@
         {
             "name": "Empresas",
             "description": "Empresas"
+        },
+        {
+            "name": "Transações",
+            "description": "Transações"
         }
     ]
 }

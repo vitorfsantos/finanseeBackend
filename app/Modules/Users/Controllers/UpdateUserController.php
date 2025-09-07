@@ -26,11 +26,11 @@ use Illuminate\Http\JsonResponse;
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             @OA\Property(property="name", type="string", maxLength=255, example="João Silva Santos", description="Nome completo do usuário"),
- *             @OA\Property(property="email", type="string", format="email", maxLength=255, example="joao.silva@exemplo.com", description="Email do usuário"),
- *             @OA\Property(property="password", type="string", minLength=6, maxLength=255, example="123456", description="Nova senha do usuário (mínimo 6 caracteres)"),
- *             @OA\Property(property="phone", type="string", example="(11) 88888-8888", description="Telefone do usuário"),
- *             @OA\Property(property="user_level_id", type="integer", example=3, description="ID do nível do usuário")
+ *             @OA\Property(property="name", type="string", maxLength=255, example="João Silva Santos", description="Nome completo do usuário (opcional)"),
+ *             @OA\Property(property="email", type="string", format="email", maxLength=255, example="joao.silva@exemplo.com", description="Email do usuário (opcional)"),
+ *             @OA\Property(property="password", type="string", minLength=6, maxLength=255, example="123456", description="Nova senha do usuário (opcional, mínimo 6 caracteres)"),
+ *             @OA\Property(property="phone", type="string", example="(11) 88888-8888", description="Telefone do usuário (opcional)"),
+ *             @OA\Property(property="user_level_id", type="integer", example=3, description="ID do nível do usuário (opcional)")
  *         )
  *     ),
  *     @OA\Response(

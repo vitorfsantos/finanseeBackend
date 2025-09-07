@@ -18,21 +18,21 @@ use Illuminate\Http\Request;
  *     @OA\Parameter(
  *         name="page",
  *         in="query",
- *         description="Número da página",
+ *         description="Número da página (opcional, padrão: 1)",
  *         required=false,
  *         @OA\Schema(type="integer", default=1)
  *     ),
  *     @OA\Parameter(
  *         name="per_page",
  *         in="query",
- *         description="Quantidade de itens por página",
+ *         description="Quantidade de itens por página (opcional, padrão: 15)",
  *         required=false,
  *         @OA\Schema(type="integer", default=15)
  *     ),
  *     @OA\Parameter(
  *         name="search",
  *         in="query",
- *         description="Termo de busca para filtrar empresas por nome ou CNPJ",
+ *         description="Termo de busca para filtrar empresas por nome ou CNPJ (opcional)",
  *         required=false,
  *         @OA\Schema(type="string")
  *     ),

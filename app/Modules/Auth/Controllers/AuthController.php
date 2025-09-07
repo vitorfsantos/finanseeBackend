@@ -19,8 +19,8 @@ use Illuminate\Http\Request;
  *         required=true,
  *         @OA\JsonContent(
  *             required={"email","password"},
- *             @OA\Property(property="email", type="string", format="email", example="usuario@exemplo.com", description="Email do usuário"),
- *             @OA\Property(property="password", type="string", format="password", example="123456", description="Senha do usuário")
+ *             @OA\Property(property="email", type="string", format="email", example="usuario@exemplo.com", description="Email do usuário (obrigatório)"),
+ *             @OA\Property(property="password", type="string", format="password", example="123456", description="Senha do usuário (obrigatório)")
  *         )
  *     ),
  *     @OA\Response(

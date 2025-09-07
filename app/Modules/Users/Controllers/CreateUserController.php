@@ -19,12 +19,12 @@ use Illuminate\Http\JsonResponse;
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *             required={"name","email","password"},
- *             @OA\Property(property="name", type="string", maxLength=255, example="João Silva", description="Nome completo do usuário"),
- *             @OA\Property(property="email", type="string", format="email", maxLength=255, example="joao@exemplo.com", description="Email único do usuário"),
- *             @OA\Property(property="password", type="string", minLength=6, maxLength=255, example="123456", description="Senha do usuário (mínimo 6 caracteres)"),
- *             @OA\Property(property="phone", type="string", example="(11) 99999-9999", description="Telefone do usuário (opcional)"),
- *             @OA\Property(property="user_level_id", type="integer", example=2, description="ID do nível do usuário (opcional)")
+ *             required={"name","email","password","user_level_id"},
+ *             @OA\Property(property="name", type="string", maxLength=255, example="João Silva", description="Nome completo do usuário (obrigatório)"),
+ *             @OA\Property(property="email", type="string", format="email", maxLength=255, example="joao@exemplo.com", description="Email único do usuário (obrigatório)"),
+ *             @OA\Property(property="password", type="string", minLength=6, maxLength=255, example="123456", description="Senha do usuário (obrigatório, mínimo 6 caracteres)"),
+ *             @OA\Property(property="user_level_id", type="integer", example=2, description="ID do nível do usuário (obrigatório)"),
+ *             @OA\Property(property="phone", type="string", example="(11) 99999-9999", description="Telefone do usuário (opcional)")
  *         )
  *     ),
  *     @OA\Response(

@@ -25,7 +25,7 @@ class CreateTransactionRequest extends BaseRequest
       'category' => 'nullable|string|max:255',
       'description' => 'nullable|string|max:1000',
       'amount' => 'required|numeric|min:0.01|max:999999.99',
-      'date' => 'required|date|before_or_equal:today',
+      'date' => 'nullable|date',
       'user_id' => 'nullable|exists:users,id',
       'company_id' => 'nullable|exists:companies,id',
     ];
@@ -45,7 +45,6 @@ class CreateTransactionRequest extends BaseRequest
       'amount.numeric' => 'O valor deve ser um número.',
       'amount.min' => 'O valor deve ser maior que zero.',
       'amount.max' => 'O valor não pode ser maior que 999.999,99.',
-      'date.required' => 'A data é obrigatória.',
       'date.date' => 'A data deve ser uma data válida.',
       'date.before_or_equal' => 'A data não pode ser futura.',
       'user_id.required' => 'O usuário é obrigatório.',
