@@ -10,11 +10,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
   /** @use HasFactory<\App\Modules\Users\Models\Factories\UserFactory> */
-  use HasFactory, Notifiable, HasApiTokens, HasUuids;
+  use HasFactory, Notifiable, HasApiTokens, HasUuids, SoftDeletes;
 
   /**
    * Create a new factory instance for the model.

@@ -6,6 +6,7 @@ use App\Modules\Users\Controllers\ShowUserController;
 use App\Modules\Users\Controllers\CreateUserController;
 use App\Modules\Users\Controllers\UpdateUserController;
 use App\Modules\Users\Controllers\DeleteUserController;
+use App\Modules\Users\Controllers\RestoreUserController;
 
 Route::prefix('users')->group(function () {
   Route::middleware(['role:adminMaster'])->group(function () {
@@ -16,6 +17,7 @@ Route::prefix('users')->group(function () {
     Route::post('/', CreateUserController::class)->name('users.store');
     Route::put('/{user}', UpdateUserController::class)->name('users.update');
     Route::delete('/{user}', DeleteUserController::class)->name('users.destroy');
+    Route::patch('/{user}/restore', RestoreUserController::class)->name('users.restore');
     Route::get('/levels', [ListUsersController::class, 'getLevels'])->name('users.levels');
   });
 

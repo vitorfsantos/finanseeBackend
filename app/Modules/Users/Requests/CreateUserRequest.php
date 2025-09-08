@@ -25,6 +25,7 @@ class CreateUserRequest extends BaseRequest
       'email' => 'required|email|unique:users,email|max:255',
       'password' => 'required|string|min:6|max:255',
       'user_level_id' => 'required|exists:user_levels,id',
+      'phone' => 'nullable|string|max:255',
     ];
   }
 

@@ -37,6 +37,7 @@ class ListUsersService
     $orderDirection = $filters['order_direction'] ?? 'asc';
     $query->orderBy($orderBy, $orderDirection);
     $query->with('level');
+    $query->withTrashed();
 
     return $query->paginate(10);
   }

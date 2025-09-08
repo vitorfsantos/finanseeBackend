@@ -24,6 +24,7 @@ class UpdateUserRequest extends BaseRequest
       'name' => 'sometimes|string|max:255',
       'email' => 'sometimes|email|max:255',
       'password' => 'sometimes|string|min:6|max:255',
+      'phone' => 'sometimes|string|max:255',
     ];
   }
 
