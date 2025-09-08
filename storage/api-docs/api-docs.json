@@ -1951,10 +1951,58 @@
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "Termo de busca para filtrar usuários (opcional)",
+                        "description": "Termo de busca para filtrar usuários por nome ou email (opcional)",
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "user_level_id",
+                        "in": "query",
+                        "description": "ID do nível de usuário para filtrar (opcional)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "order_by",
+                        "in": "query",
+                        "description": "Campo para ordenação: name, email, created_at, updated_at (opcional, padrão: name)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "name",
+                            "enum": [
+                                "name",
+                                "email",
+                                "created_at",
+                                "updated_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "order_direction",
+                        "in": "query",
+                        "description": "Direção da ordenação: asc ou desc (opcional, padrão: asc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "asc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "email_verified",
+                        "in": "query",
+                        "description": "Filtrar por status de verificação do email: true ou false (opcional)",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
                         }
                     }
                 ],
@@ -2117,6 +2165,59 @@
                                         "description": "Telefone do usuário (opcional)",
                                         "type": "string",
                                         "example": "(11) 99999-9999"
+                                    },
+                                    "company_id": {
+                                        "description": "ID da empresa existente (opcional, use apenas se não enviar dados da empresa)",
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "550e8400-e29b-41d4-a716-446655440000"
+                                    },
+                                    "company": {
+                                        "description": "Dados da empresa para criar (opcional, use apenas se não enviar company_id)",
+                                        "properties": {
+                                            "name": {
+                                                "description": "Nome da empresa (obrigatório se company for enviado)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Empresa Exemplo Ltda"
+                                            },
+                                            "cnpj": {
+                                                "description": "CNPJ da empresa (obrigatório se company for enviado)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "12.345.678/0001-90"
+                                            },
+                                            "email": {
+                                                "description": "Email da empresa (opcional)",
+                                                "type": "string",
+                                                "format": "email",
+                                                "maxLength": 255,
+                                                "example": "contato@empresa.com"
+                                            },
+                                            "phone": {
+                                                "description": "Telefone da empresa (opcional)",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "(11) 3333-4444"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "role": {
+                                        "description": "Cargo do usuário na empresa (opcional, padrão: employee)",
+                                        "type": "string",
+                                        "enum": [
+                                            "owner",
+                                            "manager",
+                                            "employee"
+                                        ],
+                                        "example": "employee"
+                                    },
+                                    "position": {
+                                        "description": "Posição específica do usuário na empresa (opcional)",
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Desenvolvedor"
                                     }
                                 },
                                 "type": "object"
@@ -2166,6 +2267,48 @@
                                                     "type": "string",
                                                     "format": "date-time",
                                                     "example": "2024-01-01T00:00:00.000000Z"
+                                                },
+                                                "companies": {
+                                                    "description": "Empresas associadas ao usuário (se aplicável)",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "550e8400-e29b-41d4-a716-446655440001"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Empresa Exemplo Ltda"
+                                                            },
+                                                            "cnpj": {
+                                                                "type": "string",
+                                                                "example": "12.345.678/0001-90"
+                                                            },
+                                                            "email": {
+                                                                "type": "string",
+                                                                "example": "contato@empresa.com"
+                                                            },
+                                                            "phone": {
+                                                                "type": "string",
+                                                                "example": "(11) 3333-4444"
+                                                            },
+                                                            "pivot": {
+                                                                "properties": {
+                                                                    "role": {
+                                                                        "type": "string",
+                                                                        "example": "employee"
+                                                                    },
+                                                                    "position": {
+                                                                        "type": "string",
+                                                                        "example": "Desenvolvedor"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 }
                                             },
                                             "type": "object"

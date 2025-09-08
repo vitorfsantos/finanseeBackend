@@ -72,16 +72,11 @@ class RestoreUserController extends Controller
   /**
    * Restore the specified user
    */
-  public function __invoke(User $user): JsonResponse
+  public function __invoke(string $userId): JsonResponse
   {
-    // Check if user is actually deleted
-    if (!$user->trashed()) {
-      return response()->json([
-        'message' => 'Usuário não foi excluído ou já foi restaurado'
-      ], 422);
-    }
+    
 
-    $this->restoreUserService->restore($user);
+    $this->restoreUserService->restore($userId);
 
     return response()->json([
       'message' => 'Usuário restaurado com sucesso'

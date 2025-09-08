@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
@@ -91,5 +92,19 @@ class User extends Authenticatable
   public function canManageUsers(): bool
   {
     return $this->level && $this->level->canManageUsers();
+  }
+
+  /**
+   * Get the companies associated with this user
+   */
+  public function companies(): BelongsToMany
+  {
+    return $this->belongsToMany(
+      \App\Modules\Companies\Models\Company::class,
+      'company_user',
+      'user_id',
+      'company_id'
+    )->withPivot(['role', 'position', 'created_at', 'updated_at'])
+      ->withTimestamps();
   }
 }

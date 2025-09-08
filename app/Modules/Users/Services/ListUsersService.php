@@ -24,6 +24,10 @@ class ListUsersService
       });
     }
 
+    if (isset($filters['user_level_id'])) {
+      $query->where('user_level_id', $filters['user_level_id']);
+    }
+
     if (isset($filters['email_verified'])) {
       if ($filters['email_verified']) {
         $query->whereNotNull('email_verified_at');
@@ -39,7 +43,8 @@ class ListUsersService
     $query->with('level');
     $query->withTrashed();
 
-    return $query->paginate(10);
+    $perPage = $filters['per_page'] ?? 10;
+    return $query->paginate($perPage);
   }
 
   /**

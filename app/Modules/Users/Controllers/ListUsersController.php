@@ -4,6 +4,7 @@ namespace App\Modules\Users\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Users\Services\ListUsersService;
+use App\Modules\Users\Requests\ListUsersRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -32,9 +33,37 @@ use Illuminate\Http\Request;
  *     @OA\Parameter(
  *         name="search",
  *         in="query",
- *         description="Termo de busca para filtrar usuários (opcional)",
+ *         description="Termo de busca para filtrar usuários por nome ou email (opcional)",
  *         required=false,
  *         @OA\Schema(type="string")
+ *     ),
+ *     @OA\Parameter(
+ *         name="user_level_id",
+ *         in="query",
+ *         description="ID do nível de usuário para filtrar (opcional)",
+ *         required=false,
+ *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Parameter(
+ *         name="order_by",
+ *         in="query",
+ *         description="Campo para ordenação: name, email, created_at, updated_at (opcional, padrão: name)",
+ *         required=false,
+ *         @OA\Schema(type="string", enum={"name", "email", "created_at", "updated_at"}, default="name")
+ *     ),
+ *     @OA\Parameter(
+ *         name="order_direction",
+ *         in="query",
+ *         description="Direção da ordenação: asc ou desc (opcional, padrão: asc)",
+ *         required=false,
+ *         @OA\Schema(type="string", enum={"asc", "desc"}, default="asc")
+ *     ),
+ *     @OA\Parameter(
+ *         name="email_verified",
+ *         in="query",
+ *         description="Filtrar por status de verificação do email: true ou false (opcional)",
+ *         required=false,
+ *         @OA\Schema(type="boolean")
  *     ),
  *     @OA\Response(
  *         response=200,
@@ -86,9 +115,9 @@ class ListUsersController extends Controller
   /**
    * Display a listing of users
    */
-  public function __invoke(Request $request)
+  public function __invoke(ListUsersRequest $request)
   {
-    $users = $this->listUsersService->getAllUsers($request->all());
+    $users = $this->listUsersService->getAllUsers($request->validated());
 
     return response()->json([
       'data' => $users->items(),

@@ -9,8 +9,18 @@ class RestoreUserService
   /**
    * Restore a soft deleted user
    */
-  public function restore(User $user): bool
+  public function restore($userId): bool
   {
-    return $user->restore();
+    // Find user including soft deleted ones
+    $userModel = User::withTrashed()->find($userId);
+
+    if (!$userModel) {
+      return false;
+    }
+
+    // Check if user is actually deleted
+    if (!$userModel->trashed()) {
+    }
+    return $userModel->restore();
   }
 }
