@@ -23,6 +23,7 @@ class ListUsersRequest extends BaseRequest
     return [
       'search' => 'nullable|string|max:255',
       'user_level_id' => 'nullable|integer|exists:user_levels,id',
+      'company_id' => 'nullable|uuid|exists:companies,id',
       'page' => 'nullable|integer|min:1',
       'per_page' => 'nullable|integer|min:1|max:100',
       'order_by' => 'nullable|string|in:name,email,created_at,updated_at',
@@ -40,6 +41,8 @@ class ListUsersRequest extends BaseRequest
       'search.max' => 'O termo de busca não pode ter mais de 255 caracteres.',
       'user_level_id.integer' => 'O nível de usuário deve ser um número inteiro.',
       'user_level_id.exists' => 'O nível de usuário não existe.',
+      'company_id.uuid' => 'O ID da empresa deve ser um UUID válido.',
+      'company_id.exists' => 'A empresa não existe.',
       'page.integer' => 'A página deve ser um número inteiro.',
       'page.min' => 'A página deve ser maior que zero.',
       'per_page.integer' => 'A quantidade por página deve ser um número inteiro.',
@@ -59,6 +62,7 @@ class ListUsersRequest extends BaseRequest
     return [
       'search' => 'termo de busca',
       'user_level_id' => 'nível de usuário',
+      'company_id' => 'empresa',
       'page' => 'página',
       'per_page' => 'quantidade por página',
       'order_by' => 'campo de ordenação',
@@ -67,4 +71,3 @@ class ListUsersRequest extends BaseRequest
     ];
   }
 }
-

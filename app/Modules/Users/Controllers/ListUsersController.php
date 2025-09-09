@@ -7,6 +7,7 @@ use App\Modules\Users\Services\ListUsersService;
 use App\Modules\Users\Requests\ListUsersRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @OA\Get(
@@ -14,7 +15,7 @@ use Illuminate\Http\Request;
  *     operationId="listUsers",
  *     tags={"Usuários"},
  *     summary="Listar usuários",
- *     description="Retorna uma lista paginada de usuários. Requer permissão de admin master.",
+ *     description="Retorna uma lista paginada de usuários. Requer permissão de company admin. Admin Master vê todos os usuários, Company Admin vê apenas usuários das suas empresas.",
  *     security={{"bearerAuth":{}}},
  *     @OA\Parameter(
  *         name="page",
@@ -43,6 +44,13 @@ use Illuminate\Http\Request;
  *         description="ID do nível de usuário para filtrar (opcional)",
  *         required=false,
  *         @OA\Schema(type="integer")
+ *     ),
+ *     @OA\Parameter(
+ *         name="company_id",
+ *         in="query",
+ *         description="ID da empresa para filtrar usuários (opcional)",
+ *         required=false,
+ *         @OA\Schema(type="string", format="uuid")
  *     ),
  *     @OA\Parameter(
  *         name="order_by",
@@ -95,7 +103,7 @@ use Illuminate\Http\Request;
  *     ),
  *     @OA\Response(
  *         response=403,
- *         description="Acesso negado - Requer permissão de admin master",
+ *         description="Acesso negado - Requer permissão de company admin",
  *         @OA\JsonContent(
  *             @OA\Property(property="message", type="string", example="Access denied.")
  *         )
@@ -117,7 +125,8 @@ class ListUsersController extends Controller
    */
   public function __invoke(ListUsersRequest $request)
   {
-    $users = $this->listUsersService->getAllUsers($request->validated());
+    $loggedUser = Auth::user();
+    $users = $this->listUsersService->getAllUsers($request->validated(), $loggedUser);
 
     return response()->json([
       'data' => $users->items(),

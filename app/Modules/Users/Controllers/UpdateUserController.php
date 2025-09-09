@@ -30,7 +30,14 @@ use Illuminate\Http\JsonResponse;
  *             @OA\Property(property="email", type="string", format="email", maxLength=255, example="joao.silva@exemplo.com", description="Email do usuário (opcional)"),
  *             @OA\Property(property="password", type="string", minLength=6, maxLength=255, example="123456", description="Nova senha do usuário (opcional, mínimo 6 caracteres)"),
  *             @OA\Property(property="phone", type="string", example="(11) 88888-8888", description="Telefone do usuário (opcional)"),
- *             @OA\Property(property="user_level_id", type="integer", example=3, description="ID do nível do usuário (opcional)")
+ *             @OA\Property(property="user_level_id", type="integer", example=3, description="ID do nível do usuário (opcional)"),
+ *             @OA\Property(property="companies", type="array", description="Array de empresas para associar ao usuário (opcional, se não fornecido mantém as existentes, se fornecido substitui todas)",
+ *                 @OA\Items(type="object",
+ *                     @OA\Property(property="company_id", type="string", format="uuid", example="550e8400-e29b-41d4-a716-446655440000", description="ID da empresa existente (obrigatório)"),
+ *                     @OA\Property(property="role", type="string", enum={"owner","manager","employee"}, example="employee", description="Cargo do usuário na empresa (obrigatório)"),
+ *                     @OA\Property(property="position", type="string", maxLength=255, example="Desenvolvedor", description="Posição específica do usuário na empresa (opcional)")
+ *                 )
+ *             )
  *         )
  *     ),
  *     @OA\Response(
@@ -45,7 +52,18 @@ use Illuminate\Http\JsonResponse;
  *                 @OA\Property(property="phone", type="string", example="(11) 88888-8888"),
  *                 @OA\Property(property="user_level_id", type="integer", example=3),
  *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01T00:00:00.000000Z"),
- *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-01T12:00:00.000000Z")
+ *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-01T12:00:00.000000Z"),
+ *                 @OA\Property(property="companies", type="array", description="Empresas associadas ao usuário",
+ *                     @OA\Items(type="object",
+ *                         @OA\Property(property="id", type="string", example="550e8400-e29b-41d4-a716-446655440001"),
+ *                         @OA\Property(property="name", type="string", example="Empresa Exemplo"),
+ *                         @OA\Property(property="cnpj", type="string", example="12.345.678/0001-90"),
+ *                         @OA\Property(property="pivot", type="object",
+ *                             @OA\Property(property="role", type="string", example="employee"),
+ *                             @OA\Property(property="position", type="string", example="Desenvolvedor")
+ *                         )
+ *                     )
+ *                 )
  *             )
  *         )
  *     ),

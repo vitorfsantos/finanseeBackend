@@ -11,10 +11,32 @@ class ListUsersService
 {
   /**
    * Get all users with optional filtering
+   * 
+   * @param array $filters
+   * @param User $loggedUser The currently logged user
+   * @return LengthAwarePaginator
    */
-  public function getAllUsers(array $filters = []): LengthAwarePaginator
+  public function getAllUsers(array $filters = [], User $loggedUser = null): LengthAwarePaginator
   {
     $query = User::query();
+
+    // Apply user-level based filtering
+    if ($loggedUser) {
+      // If user is Company Admin (level 2), filter by companies they have access to
+      if ($loggedUser->user_level_id === 2) {
+        $userCompanyIds = $loggedUser->companies()->pluck('company_id')->toArray();
+
+        if (!empty($userCompanyIds)) {
+          $query->whereHas('companies', function ($q) use ($userCompanyIds) {
+            $q->whereIn('company_id', $userCompanyIds);
+          });
+        } else {
+          // If company admin has no companies, return empty result
+          $query->whereRaw('1 = 0');
+        }
+      }
+      // Admin Master (level 1) can see all users - no additional filtering needed
+    }
 
     // Apply filters
     if (isset($filters['search'])) {
@@ -36,11 +58,17 @@ class ListUsersService
       }
     }
 
+    if (isset($filters['company_id'])) {
+      $query->whereHas('companies', function ($q) use ($filters) {
+        $q->where('company_id', $filters['company_id']);
+      });
+    }
+
     // Apply ordering
     $orderBy = $filters['order_by'] ?? 'name';
     $orderDirection = $filters['order_direction'] ?? 'asc';
     $query->orderBy($orderBy, $orderDirection);
-    $query->with('level');
+    $query->with(['level', 'companies']);
     $query->withTrashed();
 
     $perPage = $filters['per_page'] ?? 10;

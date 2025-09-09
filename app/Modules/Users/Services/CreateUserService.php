@@ -3,7 +3,6 @@
 namespace App\Modules\Users\Services;
 
 use App\Modules\Users\Models\User;
-use App\Modules\Companies\Models\Company;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
@@ -20,22 +19,18 @@ class CreateUserService
         $data['password'] = Hash::make($data['password']);
       }
 
-      // Extrair dados da empresa e vínculo
-      $companyData = $data['company'] ?? null;
-      $companyId = $data['company_id'] ?? null;
-      $role = $data['role'] ?? 'employee';
-      $position = $data['position'] ?? null;
+      // Extrair dados das companies
+      $companies = $data['companies'] ?? [];
 
       // Remover dados que não pertencem ao usuário
-      unset($data['company'], $data['company_id'], $data['role'], $data['position']);
+      unset($data['companies']);
 
       // Criar o usuário
       $user = User::create($data);
 
-      // Se há dados de empresa ou company_id, criar empresa e/ou vínculo
-      if ($companyData || $companyId) {
-        $company = $this->handleCompany($companyData, $companyId);
-        $this->createUserCompanyLink($user, $company, $role, $position);
+      // Se há companies, criar vínculos
+      if (!empty($companies)) {
+        $this->createUserCompanyLinks($user, $companies);
       }
 
       return $user;
@@ -43,33 +38,22 @@ class CreateUserService
   }
 
   /**
-   * Handle company creation or retrieval
+   * Create user-company relationships for multiple companies
    */
-  private function handleCompany(?array $companyData, ?string $companyId): Company
+  private function createUserCompanyLinks(User $user, array $companies): void
   {
-    if ($companyData) {
-      // Criar nova empresa
-      return Company::create($companyData);
+    foreach ($companies as $companyData) {
+      $companyId = $companyData['company_id'];
+      $role = $companyData['role'];
+      $position = $companyData['position'] ?? null;
+
+      $user->companies()->attach($companyId, [
+        'id' => \Illuminate\Support\Str::uuid(),
+        'role' => $role,
+        'position' => $position,
+        'created_at' => now(),
+        'updated_at' => now(),
+      ]);
     }
-
-    if ($companyId) {
-      // Buscar empresa existente
-      return Company::findOrFail($companyId);
-    }
-
-    throw new \InvalidArgumentException('Either company data or company_id must be provided');
-  }
-
-  /**
-   * Create user-company relationship
-   */
-  private function createUserCompanyLink(User $user, Company $company, string $role, ?string $position): void
-  {
-    $user->companies()->attach($company->id, [
-      'role' => $role,
-      'position' => $position,
-      'created_at' => now(),
-      'updated_at' => now(),
-    ]);
   }
 }
