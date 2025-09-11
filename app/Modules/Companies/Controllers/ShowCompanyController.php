@@ -5,6 +5,7 @@ namespace App\Modules\Companies\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Companies\Models\Company;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * @OA\Get(
@@ -69,8 +70,21 @@ class ShowCompanyController extends Controller
   /**
    * Display the specified company
    */
-  public function __invoke(Company $company): JsonResponse
+  public function __invoke(Request $request, Company $company): JsonResponse
   {
+    $user = $request->user();
+
+    // Verificar se o usuário tem acesso à empresa (se não for admin master)
+    if ($user->user_level_id > 1) {
+      $userHasAccess = $user->companies()->where('company_id', $company->id)->exists();
+
+      if (!$userHasAccess) {
+        return response()->json([
+          'message' => 'Você não tem permissão para visualizar esta empresa'
+        ], 403);
+      }
+    }
+
     return response()->json([
       'data' => $company->load('address')
     ]);

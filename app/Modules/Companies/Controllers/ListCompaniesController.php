@@ -101,11 +101,12 @@ class ListCompaniesController extends Controller
   {
     $perPage = $request->get('per_page', 15);
     $search = $request->get('search');
+    $user = $request->user();
 
     if ($search) {
-      $companies = $this->listCompaniesService->search($search, $perPage);
+      $companies = $this->listCompaniesService->search($search, $perPage, $user);
     } else {
-      $companies = $this->listCompaniesService->getPaginated($perPage);
+      $companies = $this->listCompaniesService->getPaginated($perPage, $user);
     }
 
     return response()->json([

@@ -7,6 +7,7 @@ use App\Modules\Companies\Models\Company;
 use App\Modules\Companies\Requests\UpdateCompanyRequest;
 use App\Modules\Companies\Services\UpdateCompanyService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * @OA\Put(
@@ -116,9 +117,22 @@ class UpdateCompanyController extends Controller
   /**
    * Update the specified company
    */
-  public function __invoke(UpdateCompanyRequest $request, Company $company): JsonResponse
+  public function __invoke(Request $request, UpdateCompanyRequest $updateRequest, Company $company): JsonResponse
   {
-    $updatedCompany = $this->updateCompanyService->update($company, $request->validated());
+    $user = $request->user();
+
+    // Verificar se o usuário tem acesso à empresa (se não for admin master)
+    if ($user->user_level_id > 1) {
+      $userHasAccess = $user->companies()->where('company_id', $company->id)->exists();
+
+      if (!$userHasAccess) {
+        return response()->json([
+          'message' => 'Você não tem permissão para atualizar esta empresa'
+        ], 403);
+      }
+    }
+
+    $updatedCompany = $this->updateCompanyService->update($company, $updateRequest->validated());
 
     return response()->json([
       'message' => 'Empresa atualizada com sucesso',

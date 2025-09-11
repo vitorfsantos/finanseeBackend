@@ -37,10 +37,20 @@ class ShowTransactionService
 
       case 'companyAdmin':
       case 'companyUser':
-        // Company Admin e Company User só podem ver transações da sua empresa
-        $companyId = $this->getUserCompanyId($currentUser);
-        if ($transaction->company_id !== $companyId) {
-          throw new \Exception('Não autorizado a visualizar esta transação');
+        // Company Admin e Company User podem ver transações das suas empresas
+        // e transações sem company_id apenas se user_id for o próprio usuário
+        $companyIds = $this->getUserCompanyIds($currentUser);
+
+        // Se a transação tem company_id, verificar se é das empresas do usuário
+        if ($transaction->company_id !== null) {
+          if (!in_array($transaction->company_id, $companyIds)) {
+            throw new \Exception('Não autorizado a visualizar esta transação');
+          }
+        } else {
+          // Se não tem company_id, só pode ver se for do próprio usuário
+          if ($transaction->user_id !== $currentUser->id) {
+            throw new \Exception('Não autorizado a visualizar esta transação');
+          }
         }
         break;
 
@@ -57,15 +67,16 @@ class ShowTransactionService
   }
 
   /**
-   * Get the company ID for a user (companyAdmin or companyUser)
+   * Get the company IDs for a user (companyAdmin or companyUser)
    */
-  private function getUserCompanyId(User $user): ?string
+  private function getUserCompanyIds(User $user): array
   {
-    // Busca a empresa do usuário através da tabela pivot company_user
-    $companyUser = \Illuminate\Support\Facades\DB::table('company_user')
+    // Busca todas as empresas do usuário através da tabela pivot company_user
+    $companyUsers = \Illuminate\Support\Facades\DB::table('company_user')
       ->where('user_id', $user->id)
-      ->first();
+      ->pluck('company_id')
+      ->toArray();
 
-    return $companyUser ? $companyUser->company_id : null;
+    return $companyUsers;
   }
 }

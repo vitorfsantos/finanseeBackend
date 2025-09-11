@@ -27,6 +27,7 @@ class ListTransactionsService
     // Ordena por data mais recente
     $query->orderBy('date', 'desc')->orderBy('created_at', 'desc');
 
+    $query->with('user', 'company');
     return $query->paginate($filters['per_page'] ?? 15);
   }
 
@@ -48,10 +49,21 @@ class ListTransactionsService
 
       case 'companyAdmin':
       case 'companyUser':
-        // Company Admin e Company User só podem ver transações da sua empresa
-        $companyId = $this->getUserCompanyId($currentUser);
-        if ($companyId) {
-          $query->where('company_id', $companyId);
+        // Company Admin e Company User podem ver transações das suas empresas
+        // e transações sem company_id apenas se user_id for o próprio usuário
+        $companyIds = $this->getUserCompanyIds($currentUser);
+        if (!empty($companyIds)) {
+          $query->where(function ($q) use ($companyIds, $currentUser) {
+            $q->whereIn('company_id', $companyIds)
+              ->orWhere(function ($subQ) use ($currentUser) {
+                $subQ->whereNull('company_id')
+                  ->where('user_id', $currentUser->id);
+              });
+          });
+        } else {
+          // Se não tem empresas, só pode ver suas próprias transações sem company_id
+          $query->whereNull('company_id')
+            ->where('user_id', $currentUser->id);
         }
         break;
 
@@ -111,15 +123,16 @@ class ListTransactionsService
   }
 
   /**
-   * Get the company ID for a user (companyAdmin or companyUser)
+   * Get the company IDs for a user (companyAdmin or companyUser)
    */
-  private function getUserCompanyId(User $user): ?string
+  private function getUserCompanyIds(User $user): array
   {
-    // Busca a empresa do usuário através da tabela pivot company_user
-    $companyUser = \Illuminate\Support\Facades\DB::table('company_user')
+    // Busca todas as empresas do usuário através da tabela pivot company_user
+    $companyUsers = \Illuminate\Support\Facades\DB::table('company_user')
       ->where('user_id', $user->id)
-      ->first();
+      ->pluck('company_id')
+      ->toArray();
 
-    return $companyUser ? $companyUser->company_id : null;
+    return $companyUsers;
   }
 }

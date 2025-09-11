@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 // Login público
 Route::post('/auth/login', [\App\Modules\Auth\Controllers\AuthController::class, 'login'])->name('auth.login');
 
+// Geração de dados fake para testes
+Route::post('/generate-fake-data', [\App\Http\Controllers\GenerateFakeDataController::class, 'generate'])->name('generate.fake.data');
+
 // ========================================
 // ROTAS AUTENTICADAS (com auth:sanctum)
 // ========================================

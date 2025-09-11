@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Transactions\Services\ListTransactionsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @OA\Get(
@@ -125,7 +126,8 @@ class ListTransactionsController extends Controller
   public function __invoke(Request $request): JsonResponse
   {
     $filters = $request->all();
-    $transactions = $this->listTransactionsService->list(null, $filters);
+    $currentUser = Auth::user();
+    $transactions = $this->listTransactionsService->list($currentUser, $filters);
 
     return response()->json($transactions);
   }
