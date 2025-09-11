@@ -6,6 +6,7 @@ use App\Modules\Transactions\Controllers\ShowTransactionController;
 use App\Modules\Transactions\Controllers\CreateTransactionController;
 use App\Modules\Transactions\Controllers\UpdateTransactionController;
 use App\Modules\Transactions\Controllers\DeleteTransactionController;
+use App\Modules\Transactions\Controllers\MonthlyReportController;
 
 Route::prefix('transactions')->group(function () {
   Route::middleware(['role:adminMaster'])->group(function () {
@@ -37,4 +38,7 @@ Route::prefix('transactions')->group(function () {
   });
 
   Route::get('/{transaction}', ShowTransactionController::class)->name('transactions.show');
+
+  // Relatório mensal - disponível para todos os usuários autenticados
+  Route::get('/reports/monthly', [MonthlyReportController::class, 'index'])->name('reports.monthly');
 });
