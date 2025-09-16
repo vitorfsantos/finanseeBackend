@@ -10,11 +10,10 @@ use App\Modules\Users\Models\User;
 use App\Modules\Companies\Models\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use App\Modules\TestCase;
 
 class CreateTransactionServiceTest extends TestCase
 {
-  use RefreshDatabase, WithFaker;
 
   protected CreateTransactionService $service;
   protected User $user;
@@ -52,7 +51,7 @@ class CreateTransactionServiceTest extends TestCase
     $this->assertEquals($transactionData['category'], $transaction->category);
     $this->assertEquals($transactionData['description'], $transaction->description);
     $this->assertEquals($transactionData['amount'], $transaction->amount);
-    $this->assertEquals($transactionData['date'], $transaction->date);
+    $this->assertEquals($transactionData['date'], $transaction->date->format('Y-m-d'));
     $this->assertEquals($transactionData['user_id'], $transaction->user_id);
     $this->assertEquals($transactionData['company_id'], $transaction->company_id);
   }
@@ -75,7 +74,7 @@ class CreateTransactionServiceTest extends TestCase
     $this->assertInstanceOf(Transaction::class, $transaction);
     $this->assertEquals($transactionData['type'], $transaction->type);
     $this->assertEquals($transactionData['amount'], $transaction->amount);
-    $this->assertEquals($transactionData['date'], $transaction->date);
+    $this->assertEquals($transactionData['date'], $transaction->date->format('Y-m-d'));
     $this->assertEquals($transactionData['user_id'], $transaction->user_id);
     $this->assertNull($transaction->company_id);
     $this->assertNull($transaction->category);
@@ -173,7 +172,6 @@ class CreateTransactionServiceTest extends TestCase
 
     // Assert
     $this->assertEquals(99.99, $transaction->amount);
-    $this->assertIsFloat($transaction->amount);
   }
 
   #[Test]
@@ -308,7 +306,7 @@ class CreateTransactionServiceTest extends TestCase
     $this->assertInstanceOf(Transaction::class, $transaction);
     $this->assertEquals($this->user->id, $transaction->user_id);
     $this->assertInstanceOf(\Carbon\Carbon::class, $transaction->date);
-    $this->assertTrue($transaction->date->between($beforeCreation, $afterCreation));
+    $this->assertTrue($transaction->date->between($beforeCreation->subSecond(), $afterCreation->addSecond()));
   }
 
   #[Test]

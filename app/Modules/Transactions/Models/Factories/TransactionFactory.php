@@ -27,7 +27,7 @@ class TransactionFactory extends Factory
   public function definition(): array
   {
     return [
-      'user_id' => User::factory(),
+      'user_id' => User::factory()->create(['user_level_id' => 4]),
       'company_id' => Company::factory(),
       'type' => $this->faker->randomElement(['income', 'expense']),
       'category' => $this->faker->randomElement(['Alimentação', 'Transporte', 'Lazer', 'Saúde', 'Educação', 'Moradia', 'Vestuário', 'Outros']),

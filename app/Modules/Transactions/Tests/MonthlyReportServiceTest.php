@@ -7,12 +7,11 @@ use App\Modules\Transactions\Services\MonthlyReportService;
 use App\Modules\Users\Models\User;
 use App\Modules\Users\Models\UserLevel;
 use App\Modules\Companies\Models\Company;
-use Tests\TestCase;
+use App\Modules\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class MonthlyReportServiceTest extends TestCase
 {
-  use RefreshDatabase;
 
   private MonthlyReportService $service;
 
@@ -25,8 +24,7 @@ class MonthlyReportServiceTest extends TestCase
   public function test_generates_monthly_report_for_regular_user()
   {
     // Arrange
-    $userLevel = UserLevel::factory()->create(['id' => 3, 'slug' => 'user']);
-    $user = User::factory()->create(['user_level_id' => $userLevel->id]);
+    $user = User::factory()->create(['user_level_id' => 4]);
 
     // Criar transações do mês atual
     Transaction::factory()->create([
@@ -64,8 +62,7 @@ class MonthlyReportServiceTest extends TestCase
   public function test_generates_monthly_report_for_company_admin()
   {
     // Arrange
-    $userLevel = UserLevel::factory()->create(['id' => 2, 'slug' => 'companyAdmin']);
-    $user = User::factory()->create(['user_level_id' => $userLevel->id]);
+    $user = User::factory()->create(['user_level_id' => 2]);
     $company = Company::factory()->create();
 
     // Associar usuário à empresa usando DB direto para evitar problema com UUID
@@ -111,8 +108,7 @@ class MonthlyReportServiceTest extends TestCase
   public function test_generates_monthly_report_for_specific_month()
   {
     // Arrange
-    $userLevel = UserLevel::factory()->create(['id' => 3, 'slug' => 'user']);
-    $user = User::factory()->create(['user_level_id' => $userLevel->id]);
+    $user = User::factory()->create(['user_level_id' => 4]);
 
     $specificMonth = now()->subMonth(); // Mês passado
 
@@ -147,8 +143,7 @@ class MonthlyReportServiceTest extends TestCase
   public function test_returns_latest_transactions()
   {
     // Arrange
-    $userLevel = UserLevel::factory()->create(['id' => 3, 'slug' => 'user']);
-    $user = User::factory()->create(['user_level_id' => $userLevel->id]);
+    $user = User::factory()->create(['user_level_id' => 4]);
 
     // Criar 7 transações (mais que o limite de 5)
     for ($i = 0; $i < 7; $i++) {

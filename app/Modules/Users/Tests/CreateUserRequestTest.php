@@ -9,11 +9,10 @@ use App\Modules\Users\Models\UserLevel;
 use App\Modules\Users\Requests\CreateUserRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
-use Tests\TestCase;
+use App\Modules\TestCase;
 
 class CreateUserRequestTest extends TestCase
 {
-  use RefreshDatabase;
 
   protected CreateUserRequest $request;
 
@@ -43,6 +42,11 @@ class CreateUserRequestTest extends TestCase
       'email' => 'required|email|unique:users,email|max:255',
       'password' => 'required|string|min:6|max:255',
       'user_level_id' => 'required|exists:user_levels,id',
+      'phone' => 'nullable|string|max:255',
+      'companies' => 'nullable|array',
+      'companies.*.company_id' => 'required_with:companies|exists:companies,id',
+      'companies.*.role' => 'required_with:companies|in:owner,manager,employee',
+      'companies.*.position' => 'nullable|string|max:255',
     ];
 
     $this->assertEquals($expectedRules, $rules);
@@ -323,6 +327,12 @@ class CreateUserRequestTest extends TestCase
       'password.max' => 'A senha não pode ter mais de 255 caracteres.',
       'user_level_id.required' => 'O nível de usuário é obrigatório.',
       'user_level_id.exists' => 'O nível de usuário não existe.',
+      'companies.array' => 'Companies deve ser um array.',
+      'companies.*.company_id.required_with' => 'O ID da empresa é obrigatório.',
+      'companies.*.company_id.exists' => 'A empresa especificada não existe.',
+      'companies.*.role.required_with' => 'O cargo é obrigatório.',
+      'companies.*.role.in' => 'O cargo deve ser: owner, manager ou employee.',
+      'companies.*.position.max' => 'A posição não pode ter mais de 255 caracteres.',
     ];
 
     $this->assertEquals($expectedMessages, $messages);
@@ -400,12 +410,8 @@ class CreateUserRequestTest extends TestCase
   #[Test]
   public function it_accepts_valid_user_level_ids()
   {
-    // Arrange
-    $userLevel1 = UserLevel::factory()->create(['id' => 1]);
-    $userLevel2 = UserLevel::factory()->create(['id' => 2]);
-    $userLevel3 = UserLevel::factory()->create(['id' => 3]);
-
-    $validLevelIds = [$userLevel1->id, $userLevel2->id, $userLevel3->id];
+    // Arrange (UserLevels are already created by TestCase base)
+    $validLevelIds = [1, 2, 3, 4];
 
     foreach ($validLevelIds as $levelId) {
       $data = [

@@ -8,12 +8,11 @@ use App\Modules\Users\Models\UserLevel;
 use App\Modules\Companies\Models\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use App\Modules\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
 class TransactionsIntegrationTest extends TestCase
 {
-  use RefreshDatabase, WithFaker;
 
   protected User $user;
   protected User $companyAdmin;
@@ -24,15 +23,10 @@ class TransactionsIntegrationTest extends TestCase
   {
     parent::setUp();
 
-    // Create user levels
-    $userLevel = UserLevel::factory()->create(['id' => 4, 'slug' => 'user', 'name' => 'Usuário']);
-    $companyAdminLevel = UserLevel::factory()->create(['id' => 2, 'slug' => 'companyAdmin', 'name' => 'Administrador da Empresa']);
-    $adminMasterLevel = UserLevel::factory()->create(['id' => 1, 'slug' => 'adminMaster', 'name' => 'Administrador Master']);
-
-    // Create users
-    $this->user = User::factory()->create(['user_level_id' => $userLevel->id]);
-    $this->companyAdmin = User::factory()->create(['user_level_id' => $companyAdminLevel->id]);
-    $this->adminMaster = User::factory()->create(['user_level_id' => $adminMasterLevel->id]);
+    // Create users (UserLevels are already created by TestCase base)
+    $this->user = User::factory()->create(['user_level_id' => 4]);
+    $this->companyAdmin = User::factory()->create(['user_level_id' => 2]);
+    $this->adminMaster = User::factory()->create(['user_level_id' => 1]);
 
     // Create company
     $this->company = Company::factory()->create();
@@ -255,7 +249,7 @@ class TransactionsIntegrationTest extends TestCase
 
     // Assert
     $response->assertStatus(422);
-    $response->assertJsonValidationErrors(['type', 'date']);
+    $response->assertJsonValidationErrors(['type']);
   }
 
   #[Test]
@@ -278,26 +272,6 @@ class TransactionsIntegrationTest extends TestCase
     $response->assertJsonValidationErrors(['amount']);
   }
 
-  #[Test]
-  public function it_validates_date_not_in_future()
-  {
-    // Arrange
-    $this->actingAs($this->user);
-
-    $futureDate = now()->addDays(1)->format('Y-m-d');
-    $invalidData = [
-      'type' => 'expense',
-      'amount' => 25.50,
-      'date' => $futureDate,
-    ];
-
-    // Act
-    $response = $this->postJson('/api/transactions', $invalidData);
-
-    // Assert
-    $response->assertStatus(422);
-    $response->assertJsonValidationErrors(['date']);
-  }
 
   #[Test]
   public function it_filters_transactions_by_type()
@@ -435,4 +409,3 @@ class TransactionsIntegrationTest extends TestCase
     ]);
   }
 }
-

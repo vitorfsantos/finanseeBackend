@@ -155,14 +155,25 @@ class CompaniesIntegrationTest extends TestCase
   }
 
   #[Test]
-  public function anyone_can_view_specific_company()
+  public function company_admin_can_view_specific_company()
   {
     // Arrange
-    $userLevel = UserLevel::factory()->create(['id' => 3, 'name' => 'Regular User']);
-    $user = User::factory()->create(['user_level_id' => $userLevel->id]);
-    $token = $user->createToken('auth-token')->plainTextToken;
+    $adminLevel = UserLevel::factory()->create(['id' => 2, 'name' => 'Company Admin']);
+    $admin = User::factory()->create(['user_level_id' => $adminLevel->id]);
+    $token = $admin->createToken('auth-token')->plainTextToken;
 
     $company = Company::factory()->create();
+
+    // Associate the admin with the company using direct database insert
+    \DB::table('company_user')->insert([
+      'id' => \Str::uuid(),
+      'company_id' => $company->id,
+      'user_id' => $admin->id,
+      'role' => 'manager',
+      'position' => 'Admin',
+      'created_at' => now(),
+      'updated_at' => now()
+    ]);
 
     // Act
     $response = $this->getJson("/api/companies/{$company->id}", [
@@ -187,6 +198,25 @@ class CompaniesIntegrationTest extends TestCase
           'cnpj' => $company->cnpj
         ]
       ]);
+  }
+
+  #[Test]
+  public function regular_user_cannot_view_specific_company()
+  {
+    // Arrange
+    $userLevel = UserLevel::factory()->create(['id' => 3, 'name' => 'Regular User']);
+    $user = User::factory()->create(['user_level_id' => $userLevel->id]);
+    $token = $user->createToken('auth-token')->plainTextToken;
+
+    $company = Company::factory()->create();
+
+    // Act
+    $response = $this->getJson("/api/companies/{$company->id}", [
+      'Authorization' => "Bearer $token"
+    ]);
+
+    // Assert
+    $response->assertStatus(403);
   }
 
   #[Test]

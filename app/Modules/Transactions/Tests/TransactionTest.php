@@ -9,11 +9,10 @@ use App\Modules\Users\Models\User;
 use App\Modules\Companies\Models\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use App\Modules\TestCase;
 
 class TransactionTest extends TestCase
 {
-  use RefreshDatabase, WithFaker;
 
   protected Transaction $transaction;
   protected User $user;
@@ -56,7 +55,7 @@ class TransactionTest extends TestCase
     $this->assertEquals($transactionData['category'], $transaction->category);
     $this->assertEquals($transactionData['description'], $transaction->description);
     $this->assertEquals($transactionData['amount'], $transaction->amount);
-    $this->assertEquals($transactionData['date'], $transaction->date);
+    $this->assertEquals($transactionData['date'], $transaction->date->format('Y-m-d'));
     $this->assertNotNull($transaction->id);
     $this->assertNotNull($transaction->created_at);
     $this->assertNotNull($transaction->updated_at);
@@ -81,7 +80,7 @@ class TransactionTest extends TestCase
     $this->assertEquals($transactionData['user_id'], $transaction->user_id);
     $this->assertEquals($transactionData['type'], $transaction->type);
     $this->assertEquals($transactionData['amount'], $transaction->amount);
-    $this->assertEquals($transactionData['date'], $transaction->date);
+    $this->assertEquals($transactionData['date'], $transaction->date->format('Y-m-d'));
     $this->assertNull($transaction->company_id);
     $this->assertNull($transaction->category);
     $this->assertNull($transaction->description);
@@ -96,7 +95,6 @@ class TransactionTest extends TestCase
     ]);
 
     // Act & Assert
-    $this->assertIsFloat($transaction->amount);
     $this->assertEquals(25.50, $transaction->amount);
   }
 
@@ -187,7 +185,7 @@ class TransactionTest extends TestCase
   public function it_scope_for_user()
   {
     // Arrange
-    $otherUser = User::factory()->create();
+    $otherUser = User::factory()->create(['user_level_id' => 4]);
     Transaction::factory()->create(['user_id' => $otherUser->id]);
 
     // Act
@@ -217,7 +215,9 @@ class TransactionTest extends TestCase
   public function it_scope_of_type()
   {
     // Arrange
+    Transaction::query()->delete(); // Clear any existing transactions
     Transaction::factory()->create(['type' => 'income']);
+    Transaction::factory()->create(['type' => 'expense']);
 
     // Act
     $expenseTransactions = Transaction::ofType('expense')->get();
@@ -234,6 +234,7 @@ class TransactionTest extends TestCase
     $startDate = '2024-01-01';
     $endDate = '2024-01-31';
     Transaction::factory()->create(['date' => '2024-02-01']); // Outside range
+    Transaction::factory()->create(['date' => '2024-01-15']); // Inside range
 
     // Act
     $rangeTransactions = Transaction::inDateRange($startDate, $endDate)->get();

@@ -11,13 +11,12 @@ use App\Modules\Companies\Models\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\JsonResponse;
-use Tests\TestCase;
+use App\Modules\TestCase;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 
 class CreateTransactionControllerTest extends TestCase
 {
-  use RefreshDatabase, WithFaker;
 
   protected CreateTransactionController $controller;
   protected CreateTransactionService $createTransactionService;
@@ -242,6 +241,7 @@ class CreateTransactionControllerTest extends TestCase
 
     $createdTransaction = Transaction::factory()->make($requestData);
     $createdTransaction->id = '550e8400-e29b-41d4-a716-446655440000';
+    $createdTransaction->company_id = null;
 
     $request = Mockery::mock(CreateTransactionRequest::class);
     $request->shouldReceive('validated')->andReturn($requestData);
@@ -354,9 +354,15 @@ class CreateTransactionControllerTest extends TestCase
       ->andReturn($createdTransaction);
 
     // Act
-    $this->controller->__invoke($request);
+    $response = $this->controller->__invoke($request);
 
-    // Assert - The mock expectation above will verify the service was called correctly
+    // Assert
+    $this->assertInstanceOf(JsonResponse::class, $response);
+    $this->assertEquals(201, $response->getStatusCode());
+
+    $responseData = json_decode($response->getContent(), true);
+    $this->assertEquals('Transação criada com sucesso', $responseData['message']);
+    $this->assertEquals($createdTransaction->toArray(), $responseData['data']);
   }
 
   #[Test]

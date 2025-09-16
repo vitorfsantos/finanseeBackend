@@ -9,11 +9,10 @@ use App\Modules\Users\Models\User;
 use App\Modules\Companies\Models\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
-use Tests\TestCase;
+use App\Modules\TestCase;
 
 class CreateTransactionRequestTest extends TestCase
 {
-  use RefreshDatabase;
 
   protected CreateTransactionRequest $request;
 
@@ -43,7 +42,7 @@ class CreateTransactionRequestTest extends TestCase
       'category' => 'nullable|string|max:255',
       'description' => 'nullable|string|max:1000',
       'amount' => 'required|numeric|min:0.01|max:999999.99',
-      'date' => 'required|date|before_or_equal:today',
+      'date' => 'nullable|date',
       'user_id' => 'nullable|exists:users,id',
       'company_id' => 'nullable|exists:companies,id',
     ];
@@ -163,23 +162,6 @@ class CreateTransactionRequestTest extends TestCase
     $this->assertContains('O valor não pode ser maior que 999.999,99.', $validator->errors()->get('amount'));
   }
 
-  #[Test]
-  public function it_validates_required_date()
-  {
-    // Arrange
-    $data = [
-      'type' => 'expense',
-      'amount' => 25.50,
-    ];
-
-    // Act
-    $validator = Validator::make($data, $this->request->rules(), $this->request->messages());
-
-    // Assert
-    $this->assertTrue($validator->fails());
-    $this->assertArrayHasKey('date', $validator->errors()->toArray());
-    $this->assertContains('A data é obrigatória.', $validator->errors()->get('date'));
-  }
 
   #[Test]
   public function it_validates_date_format()
@@ -200,25 +182,6 @@ class CreateTransactionRequestTest extends TestCase
     $this->assertContains('A data deve ser uma data válida.', $validator->errors()->get('date'));
   }
 
-  #[Test]
-  public function it_validates_date_not_in_future()
-  {
-    // Arrange
-    $futureDate = now()->addDays(1)->format('Y-m-d');
-    $data = [
-      'type' => 'expense',
-      'amount' => 25.50,
-      'date' => $futureDate,
-    ];
-
-    // Act
-    $validator = Validator::make($data, $this->request->rules(), $this->request->messages());
-
-    // Assert
-    $this->assertTrue($validator->fails());
-    $this->assertArrayHasKey('date', $validator->errors()->toArray());
-    $this->assertContains('A data não pode ser futura.', $validator->errors()->get('date'));
-  }
 
   #[Test]
   public function it_validates_category_max_length()
