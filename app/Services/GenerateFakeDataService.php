@@ -10,9 +10,17 @@ use App\Modules\Addresses\Models\Address;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Faker\Factory as Faker;
 
 class GenerateFakeDataService
 {
+  private $faker;
+
+  public function __construct()
+  {
+    $this->faker = Faker::create('pt_BR');
+  }
+
   /**
    * Generate fake data based on type
    */
@@ -39,16 +47,16 @@ class GenerateFakeDataService
 
       // Create user
       $user = User::create([
-        'name' => fake()->name(),
-        'email' => fake()->unique()->safeEmail(),
+        'name' => $this->faker->name(),
+        'email' => $this->faker->unique()->safeEmail(),
         'password' => Hash::make($plainPassword),
-        'phone' => fake()->optional()->phoneNumber(),
+        'phone' => $this->faker->optional()->phoneNumber(),
         'user_level_id' => $userLevel->id,
         'email_verified_at' => now(),
       ]);
 
       // Generate personal transactions (10-20 transactions)
-      $transactionCount = fake()->numberBetween(10, 20);
+      $transactionCount = $this->faker->numberBetween(10, 20);
       $this->generatePersonalTransactions($user, $transactionCount);
 
       return [
@@ -78,10 +86,10 @@ class GenerateFakeDataService
 
       // Create company
       $company = Company::create([
-        'name' => fake()->company() . ' LTDA',
+        'name' => $this->faker->company() . ' LTDA',
         'cnpj' => $this->generateCnpj(),
-        'email' => fake()->companyEmail(),
-        'phone' => fake()->phoneNumber(),
+        'email' => $this->faker->companyEmail(),
+        'phone' => $this->faker->phoneNumber(),
       ]);
 
       // Create company address
@@ -89,10 +97,10 @@ class GenerateFakeDataService
 
       // Create company admin user
       $adminUser = User::create([
-        'name' => fake()->name(),
-        'email' => fake()->unique()->safeEmail(),
+        'name' => $this->faker->name(),
+        'email' => $this->faker->unique()->safeEmail(),
         'password' => Hash::make($plainPassword),
-        'phone' => fake()->optional()->phoneNumber(),
+        'phone' => $this->faker->optional()->phoneNumber(),
         'user_level_id' => $companyAdminLevel->id,
         'email_verified_at' => now(),
       ]);
@@ -107,15 +115,15 @@ class GenerateFakeDataService
       ]);
 
       // Create company users (3-7 users)
-      $userCount = fake()->numberBetween(3, 7);
+      $userCount = $this->faker->numberBetween(3, 7);
       $companyUsers = [];
 
       for ($i = 0; $i < $userCount; $i++) {
         $companyUser = User::create([
-          'name' => fake()->name(),
-          'email' => fake()->unique()->safeEmail(),
+          'name' => $this->faker->name(),
+          'email' => $this->faker->unique()->safeEmail(),
           'password' => Hash::make('password123'),
-          'phone' => fake()->optional()->phoneNumber(),
+          'phone' => $this->faker->optional()->phoneNumber(),
           'user_level_id' => $companyUserLevel->id,
           'email_verified_at' => now(),
         ]);
@@ -123,8 +131,8 @@ class GenerateFakeDataService
         // Link user to company
         $companyUser->companies()->attach($company->id, [
           'id' => Str::uuid(),
-          'role' => fake()->randomElement(['manager', 'employee']),
-          'position' => fake()->randomElement(['Gerente', 'Analista', 'Assistente', 'Coordenador']),
+          'role' => $this->faker->randomElement(['manager', 'employee']),
+          'position' => $this->faker->randomElement(['Gerente', 'Analista', 'Assistente', 'Coordenador']),
           'created_at' => now(),
           'updated_at' => now(),
         ]);
@@ -133,7 +141,7 @@ class GenerateFakeDataService
       }
 
       // Generate company transactions (20-50 transactions)
-      $transactionCount = fake()->numberBetween(20, 50);
+      $transactionCount = $this->faker->numberBetween(20, 50);
       $this->generateCompanyTransactions($company, array_merge([$adminUser], $companyUsers), $transactionCount);
 
       return [
@@ -160,22 +168,22 @@ class GenerateFakeDataService
     $incomeCategories = ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Outros'];
 
     for ($i = 0; $i < $count; $i++) {
-      $isIncome = fake()->boolean(30); // 30% chance of income
+      $isIncome = $this->faker->boolean(30); // 30% chance of income
 
       Transaction::create([
         'user_id' => $user->id,
         'company_id' => null, // Personal transaction
         'type' => $isIncome ? 'income' : 'expense',
         'category' => $isIncome
-          ? fake()->randomElement($incomeCategories)
-          : fake()->randomElement($categories),
+          ? $this->faker->randomElement($incomeCategories)
+          : $this->faker->randomElement($categories),
         'description' => $isIncome
-          ? fake()->randomElement(['Salário mensal', 'Freelance projeto', 'Dividendos', 'Venda de item'])
-          : fake()->randomElement(['Supermercado', 'Combustível', 'Cinema', 'Consulta médica', 'Aluguel']),
+          ? $this->faker->randomElement(['Salário mensal', 'Freelance projeto', 'Dividendos', 'Venda de item'])
+          : $this->faker->randomElement(['Supermercado', 'Combustível', 'Cinema', 'Consulta médica', 'Aluguel']),
         'amount' => $isIncome
-          ? fake()->randomFloat(2, 500, 5000)
-          : fake()->randomFloat(2, 10, 500),
-        'date' => fake()->dateTimeBetween('-6 months', 'now'),
+          ? $this->faker->randomFloat(2, 500, 5000)
+          : $this->faker->randomFloat(2, 10, 500),
+        'date' => $this->faker->dateTimeBetween('-6 months', 'now'),
       ]);
     }
   }
@@ -189,23 +197,23 @@ class GenerateFakeDataService
     $incomeCategories = ['Vendas', 'Serviços', 'Consultoria', 'Licenciamento', 'Outros'];
 
     for ($i = 0; $i < $count; $i++) {
-      $isIncome = fake()->boolean(40); // 40% chance of income
-      $user = fake()->randomElement($users);
+      $isIncome = $this->faker->boolean(40); // 40% chance of income
+      $user = $this->faker->randomElement($users);
 
       Transaction::create([
         'user_id' => $user->id,
         'company_id' => $company->id,
         'type' => $isIncome ? 'income' : 'expense',
         'category' => $isIncome
-          ? fake()->randomElement($incomeCategories)
-          : fake()->randomElement($categories),
+          ? $this->faker->randomElement($incomeCategories)
+          : $this->faker->randomElement($categories),
         'description' => $isIncome
-          ? fake()->randomElement(['Venda de produto', 'Serviço prestado', 'Consultoria', 'Licenciamento'])
-          : fake()->randomElement(['Compra de material', 'Campanha publicitária', 'Salários', 'Aluguel', 'Equipamentos']),
+          ? $this->faker->randomElement(['Venda de produto', 'Serviço prestado', 'Consultoria', 'Licenciamento'])
+          : $this->faker->randomElement(['Compra de material', 'Campanha publicitária', 'Salários', 'Aluguel', 'Equipamentos']),
         'amount' => $isIncome
-          ? fake()->randomFloat(2, 1000, 10000)
-          : fake()->randomFloat(2, 100, 2000),
-        'date' => fake()->dateTimeBetween('-6 months', 'now'),
+          ? $this->faker->randomFloat(2, 1000, 10000)
+          : $this->faker->randomFloat(2, 100, 2000),
+        'date' => $this->faker->dateTimeBetween('-6 months', 'now'),
       ]);
     }
   }
@@ -218,13 +226,13 @@ class GenerateFakeDataService
     Address::create([
       'addressable_type' => Company::class,
       'addressable_id' => $company->id,
-      'street' => fake()->streetAddress(),
-      'number' => fake()->buildingNumber(),
-      'complement' => fake()->optional()->secondaryAddress(),
-      'neighborhood' => fake()->citySuffix(),
-      'city' => fake()->city(),
-      'state' => fake()->stateAbbr(),
-      'zipcode' => fake()->postcode(),
+      'street' => $this->faker->streetAddress(),
+      'number' => $this->faker->buildingNumber(),
+      'complement' => $this->faker->optional()->secondaryAddress(),
+      'neighborhood' => $this->faker->citySuffix(),
+      'city' => $this->faker->city(),
+      'state' => $this->faker->stateAbbr(),
+      'zipcode' => $this->faker->postcode(),
       'country' => 'Brasil',
     ]);
   }
@@ -236,11 +244,11 @@ class GenerateFakeDataService
   {
     $cnpj = '';
     for ($i = 0; $i < 8; $i++) {
-      $cnpj .= fake()->numberBetween(0, 9);
+      $cnpj .= $this->faker->numberBetween(0, 9);
     }
     $cnpj .= '0001'; // Branch
     for ($i = 0; $i < 2; $i++) {
-      $cnpj .= fake()->numberBetween(0, 9);
+      $cnpj .= $this->faker->numberBetween(0, 9);
     }
 
     // Format CNPJ
