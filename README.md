@@ -245,7 +245,7 @@ Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICE
 ## 📞 Suporte
 
 Para dúvidas ou suporte:
-- **Email**: contato@finansee.com
+- **Email**: vitorxfelippe@gmail.com
 - **Documentação**: Acesse `/api/documentation` após iniciar o servidor
 - **Issues**: Use o sistema de issues do GitHub
 
