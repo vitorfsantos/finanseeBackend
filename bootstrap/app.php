@@ -11,6 +11,14 @@ return Application::configure(basePath: dirname(__DIR__))
     commands: __DIR__ . '/../routes/console.php',
     health: '/up',
   )
+  ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule): void {
+    // Executa o comando de reset do banco diariamente à meia-noite
+    $schedule->command('database:reset-daily')
+      ->dailyAt('00:00')
+      ->withoutOverlapping()
+      ->runInBackground()
+      ->appendOutputTo(storage_path('logs/database-reset.log'));
+  })
   ->withMiddleware(function (Middleware $middleware): void {
     // Register custom middleware
     $middleware->alias([
